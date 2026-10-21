@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C# Data Types &amp; Casting - Projector Presentation</title>
+  <style>
+    :root {
+      --bg-dark: #0b0f19;
+      --card-bg: #141c2e;
+      --card-border: #2d3b55;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-cyan: #38bdf8;
+      --accent-purple: #c084fc;
+      --accent-emerald: #34d399;
+      --accent-amber: #fbbf24;
+      --accent-rose: #f43f5e;
+      --code-bg: #030712;
+      --keyword-color: #f472b6;
+      --type-color: #38bdf8;
+      --string-color: #a3e635;
+      --number-color: #fb923c;
+      --comment-color: #64748b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+      overflow-x: hidden;
+    }
+
+    /* Projector-optimized 16:9 widescreen container */
+    .deck-container {
+      width: 100%;
+      max-width: 1180px;
+      min-height: 670px;
+      aspect-ratio: 16 / 9;
+      background: var(--card-bg);
+      border: 2px solid var(--card-border);
+      border-radius: 18px;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Top Bar */
+    .deck-header {
+      padding: 14px 28px;
+      background: rgba(11, 15, 25, 0.85);
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .topic-pill {
+      background: rgba(56, 189, 248, 0.2);
+      color: var(--accent-cyan);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      padding: 4px 12px;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .slide-counter {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      background: rgba(15, 23, 42, 0.8);
+      padding: 5px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--card-border);
+    }
+
+    .progress-bar {
+      height: 5px;
+      background: #1e293b;
+      width: 100%;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+      width: 20%;
+      transition: width 0.3s ease;
+    }
+
+    /* Slide Viewport - No vertical scrolling on projector */
+    .slide-viewport {
+      flex: 1;
+      padding: 24px 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+
+    .slide-view {
+      display: none;
+      flex-direction: column;
+      height: 100%;
+      animation: fadeIn 0.25s ease-out forwards;
+      justify-content: space-between;
+    }
+
+    .slide-view.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Projector Sized Typography */
+    .slide-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .slide-headline {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* Bilingual Badges */
+    .bilingual-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(192, 132, 252, 0.4);
+      padding: 4px 12px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+    }
+
+    .bilingual-chip .en-term {
+      color: var(--accent-cyan);
+      font-weight: 700;
+    }
+
+    .bilingual-chip .lang-tag {
+      font-size: 0.8rem;
+      color: var(--accent-amber);
+    }
+
+    .bilingual-chip .rtl-term {
+      color: #f1f5f9;
+      font-weight: 600;
+    }
+
+    /* Code Cards Grid */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      flex: 1;
+      align-items: stretch;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      flex: 1;
+      align-items: stretch;
+    }
+
+    .code-card {
+      background: var(--code-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .card-top {
+      padding: 10px 16px;
+      background: rgba(255, 255, 255, 0.04);
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .card-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-code {
+      padding: 14px 16px;
+      flex: 1;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 1.05rem;
+      line-height: 1.55;
+      color: #e2e8f0;
+      overflow-x: auto;
+    }
+
+    .card-code pre {
+      margin: 0;
+      white-space: pre;
+    }
+
+    .card-output {
+      padding: 8px 16px;
+      background: rgba(30, 41, 59, 0.6);
+      border-top: 1px solid #1e293b;
+      font-family: Consolas, monospace;
+      font-size: 0.92rem;
+      color: var(--accent-emerald);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Key Idea / Takeaway Banner */
+    .key-idea-banner {
+      background: rgba(56, 189, 248, 0.1);
+      border-left: 5px solid var(--accent-cyan);
+      padding: 10px 18px;
+      border-radius: 0 10px 10px 0;
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: #f1f5f9;
+      margin-top: 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .key-idea-banner strong {
+      color: var(--accent-cyan);
+    }
+
+    /* Syntax Tokens */
+    .code-keyword { color: var(--keyword-color); font-weight: 700; }
+    .code-type { color: var(--type-color); font-weight: 700; }
+    .code-string { color: var(--string-color); }
+    .code-number { color: var(--number-color); font-weight: 600; }
+    .code-comment { color: var(--comment-color); font-style: italic; }
+    .code-method { color: #fbbf24; }
+
+    /* Interactive Quiz Card */
+    .quiz-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      flex: 1;
+    }
+
+    .quiz-card {
+      background: var(--code-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 16px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .quiz-question {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 10px;
+    }
+
+    .reveal-btn {
+      background: rgba(192, 132, 252, 0.2);
+      border: 1px solid var(--accent-purple);
+      color: var(--accent-purple);
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+      align-self: flex-start;
+      margin-top: 10px;
+    }
+
+    .reveal-btn:hover {
+      background: rgba(192, 132, 252, 0.35);
+      transform: translateY(-2px);
+    }
+
+    .answer-panel {
+      display: none;
+      background: rgba(34, 197, 94, 0.15);
+      border-left: 4px solid var(--accent-emerald);
+      padding: 10px 14px;
+      border-radius: 0 8px 8px 0;
+      font-size: 1.05rem;
+      color: #dcfce7;
+      margin-top: 10px;
+    }
+
+    .answer-panel.show {
+      display: block;
+    }
+
+    /* Footer */
+    .deck-footer {
+      padding: 14px 28px;
+      background: rgba(11, 15, 25, 0.9);
+      border-top: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .key-badge {
+      background: #1e293b;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-family: monospace;
+      color: #94a3b8;
+      border: 1px solid #334155;
+      font-size: 0.85rem;
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: 12px;
+    }
+
+    .nav-btn {
+      background: #1e293b;
+      border: 1px solid var(--card-border);
+      color: #ffffff;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .nav-btn:hover:not(:disabled) {
+      background: #334155;
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    .nav-btn.primary {
+      background: var(--accent-cyan);
+      color: #0b0f19;
+      border-color: var(--accent-cyan);
+    }
+
+    .nav-btn.primary:hover:not(:disabled) {
+      background: #7dd3fc;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="deck-container">
+    <!-- Header -->
+    <header class="deck-header">
+      <span class="topic-pill">C# Computer Science &bull; 10th Grade</span>
+      <div class="slide-counter" id="slideCounter">Slide 1 of 5</div>
+    </header>
+
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <!-- Main Viewport -->
+    <main class="slide-viewport">
+
+      <!-- SLIDE 1: Introduction to Data Types -->
+      <section class="slide-view active" id="slide-0">
+        <div class="slide-header">
+          <h1 class="slide-headline"><span>📦</span> C# Data Types</h1>
+          <div class="bilingual-chip">
+            <span class="en-term">Data Type</span>
+            <span class="lang-tag">HE:</span> <bdi class="rtl-term" dir="rtl">טיפוס נתונים</bdi>
+            <span class="lang-tag">AR:</span> <bdi class="rtl-term" dir="rtl">نوع البيانات</bdi>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <!-- Code Blueprint 1 -->
+          <div class="code-card">
+            <div class="card-top">
+              <span class="card-title">Declaration Blueprint</span>
+            </div>
+            <div class="card-code">
+              <pre><span class="code-comment">// 1. Specify type  2. Name it  3. Assign value</span>
+<span class="code-type">DataType</span> variableName = value;
+
+<span class="code-comment">// Concrete Examples:</span>
+<span class="code-type">int</span>    playerScore = <span class="code-number">100</span>;
+<span class="code-type">double</span> runSpeed    = <span class="code-number">4.5</span>;
+<span class="code-type">string</span> heroName    = <span class="code-string">"Nova"</span>;</pre>
+            </div>
+            <div class="card-output">
+              <span>&gt; Statically Typed: Types never change after creation!</span>
+            </div>
+          </div>
+
+          <!-- Code Blueprint 2: Using & Combining Variables -->
+          <div class="code-card">
+            <div class="card-top">
+              <span class="card-title">Using Variables in Code</span>
+            </div>
+            <div class="card-code">
+              <pre><span class="code-comment">// Declare and display different types:</span>
+<span class="code-type">int</span>    score = <span class="code-number">100</span>;
+<span class="code-type">double</span> speed = <span class="code-number">4.5</span>;
+<span class="code-type">string</span> hero  = <span class="code-string">"Nova"</span>;
+
+<span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">$"Hero: {hero}"</span>);
+<span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">$"Score: {score}, Speed: {speed}"</span>);</pre>
+            </div>
+            <div class="card-output">
+              <span>&gt; Output: Hero: Nova | Score: 100, Speed: 4.5</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="key-idea-banner">
+          <span>💡</span>
+          <div><strong>Core Idea:</strong> Variables are typed data containers. C# is statically typed, meaning each variable has a fixed type that never changes.</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 2: The Core Three (int, double, string) -->
+      <section class="slide-view" id="slide-1">
+        <div class="slide-header">
+          <h1 class="slide-headline"><span>🔢</span> The Core Three: int, double, string</h1>
+          <div style="display: flex; gap: 8px;">
+            <div class="bilingual-chip">
+              <span class="en-term">int</span>: <bdi class="rtl-term" dir="rtl">מספר שלם / عدد صحيح</bdi>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-3">
+          <!-- int -->
+          <div class="code-card">
+            <div class="card-top">
+              <span class="card-title">int (Integers)</span>
+            </div>
+            <div class="card-code">
+              <pre><span class="code-comment">// Whole numbers only</span>
+<span class="code-type">int</span> lives = <span class="code-number">3</span>;
+<span class="code-type">int</span> score = <span class="code-number">1250</span>;
+<span class="code-type">int</span> coins = -<span class="code-number">5</span>;
+
+score += <span class="code-number">250</span>;</pre>
+            </div>
+            <div class="card-output">
+              <span>&gt; No decimals allowed</span>
+            </div>
+          </div>
+
+          <!-- double -->
+          <div class="code-card">
+            <div class="card-top">
+              <span class="card-title">double (Decimals)</span>
+            </div>
+            <div class="card-code">
+              <pre><span class="code-comment">// Standard decimal numbers</span>
+<span class="code-type">double</span> velocity = <span class="code-number">9.81</span>;
+<span class="code-type">double</span> health   = <span class="code-number">75.5</span>;
+<span class="code-type">double</span> scale    = <span class="code-number">0.5</span>;
+
+health -= <span class="code-number">12.2</span>;</pre>
+            </div>
+            <div class="card-output">
+              <span>&gt; Default decimal type in C#</span>
+            </div>
+          </div>
+
+          <!-- string -->
+          <div class="code-card">
+            <div class="card-top">
+              <span class="card-title">string (Text)</span>
+            </div>
+            <div class="card-code">
+              <pre><span class="code-comment">// Double quotes for text</span>
+<span class="code-type">string</span> hero = <span class="code-string">"Shadow"</span>;
+<span class="code-type">string</span> rank = <span class="code-string">"Gold"</span>;
+
+<span class="code-comment">// Python "str" is "string" in C#</span>
+<span class="code-type">string</span> info = hero + <span class="code-string">" - "</span> + rank;</pre>
+            </div>
+            <div class="card-output">
+              <span>&gt; Output: "Shadow - Gold"</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="key-idea-banner">
+          <span>🧠</span>
+          <div><strong>Rule:</strong> Whole numbers use <code>int</code>, fractional decimals use <code>double</code>, and text uses <code>string</code>.</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 3: Type Casting in Action -->
+      <section class="slide-view" id="slide-2">
+        <div class="slide-header">
+          <h1 class="slide-headline"><span>🔄</span> Type Casting in Action</h1>
+          <div class="bilingual-chip">
+            <span class="en-term">Casting</span>
+            <span class="lang-tag">HE:</span> <bdi class="rtl-term" dir="rtl">המרה</bdi>
+            <span class="lang-tag">AR:</span> <bdi class="rtl-term" dir="rtl">تحويل الأنواع</bdi>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <!-- Implicit vs Explicit -->
+          <div class="code-card">
+            <div class="card-top">
+              <span class="card-title">Implicit vs. Explicit Cast</span>
+            </div>
+            <div class="card-code">
+              <pre><span class="code-comment">// 1. Implicit (Safe: int ➔ double)</span>
+<span class="code-type">int</span> basePoints = <span class="code-number">40</span>;
+<span class="code-type">double</span> total   = basePoints; <span class="code-comment">// Automatic: 40.0</span>
+
+<span class="code-comment">// 2. Explicit (Truncation: double ➔ int)</span>
+<span class="code-type">double</span> exactHp = <span class="code-number">19.95</span>;
+<span class="code-type">int</span> roundedHp  = (<span class="code-type">int</span>)exactHp; <span class="code-comment">// Chops decimals!</span>
+
+<span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(roundedHp);</pre>
+            </div>
+            <div class="card-output">
+              <span>&gt; Output: 19 (Truncates! Does NOT round!)</span>
+            </div>
+          </div>
+
+          <!-- String Parsing -->
+          <div class="code-card">
+            <div class="card-top">
+              <span class="card-title">String Parsing (Input ➔ Numbers)</span>
+            </div>
+            <div class="card-code">
+              <pre><span class="code-comment">// Convert string text into numbers for math:</span>
+<span class="code-type">string</span> inputAge   = <span class="code-string">"16"</span>;
+<span class="code-type">string</span> inputPrice = <span class="code-string">"14.99"</span>;
+
+<span class="code-type">int</span> age      = <span class="code-type">int</span>.<span class="code-method">Parse</span>(inputAge);
+<span class="code-type">double</span> price = <span class="code-type">double</span>.<span class="code-method">Parse</span>(inputPrice);
+
+<span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(age + <span class="code-number">4</span>); <span class="code-comment">// Math works!</span></pre>
+            </div>
+            <div class="card-output">
+              <span>&gt; Output: 20</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="key-idea-banner">
+          <span>⚠️</span>
+          <div><strong>Takeaway:</strong> Implicit cast is automatic. Explicit <code>(int)</code> truncates fractions. Text requires <code>int.Parse()</code> or <code>double.Parse()</code>.</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 4: When to Cast -->
+      <section class="slide-view" id="slide-3">
+        <div class="slide-header">
+          <h1 class="slide-headline"><span>🎯</span> When Should Casting Be Used?</h1>
+          <div class="bilingual-chip">
+            <span class="en-term">Syntax Fixes</span>: <bdi class="rtl-term" dir="rtl">מניעת שגיאות חישוב / تفادي أخطاء الحساب</bdi>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <!-- Problem 1: Integer Division Trap -->
+          <div class="code-card">
+            <div class="card-top">
+              <span class="card-title">Case 1: Fix Integer Division</span>
+            </div>
+            <div class="card-code">
+              <pre><span class="code-comment">// WRONG: int / int discards remainder</span>
+<span class="code-type">double</span> badRatio  = <span class="code-number">5</span> / <span class="code-number">2</span>;        <span class="code-comment">// Result: 2.0</span>
+
+<span class="code-comment">// FIXED: Cast one operand to double</span>
+<span class="code-type">double</span> goodRatio = (<span class="code-type">double</span>)<span class="code-number">5</span> / <span class="code-number">2</span>; <span class="code-comment">// Result: 2.5</span>
+
+<span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(goodRatio);</pre>
+            </div>
+            <div class="card-output">
+              <span>&gt; Output: 2.5</span>
+            </div>
+          </div>
+
+          <!-- Problem 2: Reading User Input -->
+          <div class="code-card">
+            <div class="card-top">
+              <span class="card-title">Case 2: Reading Console.ReadLine()</span>
+            </div>
+            <div class="card-code">
+              <pre><span class="code-comment">// Console input is ALWAYS a string:</span>
+<span class="code-type">Console</span>.<span class="code-method">Write</span>(<span class="code-string">"Enter level: "</span>);
+<span class="code-type">string</span> rawInput = <span class="code-type">Console</span>.<span class="code-method">ReadLine</span>();
+
+<span class="code-comment">// Cast/Parse to int before adding points:</span>
+<span class="code-type">int</span> nextLevel = <span class="code-type">int</span>.<span class="code-method">Parse</span>(rawInput) + <span class="code-number">1</span>;
+
+<span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">"Next: "</span> + nextLevel);</pre>
+            </div>
+            <div class="card-output">
+              <span>&gt; User inputs "4" ➔ Prints: Next: 5</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="key-idea-banner">
+          <span>📌</span>
+          <div><strong>When to cast:</strong> 1. Keyboard input math. 2. Preserving division decimals. 3. Dropping decimals for UI pixels.</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 5: Comprehension Check -->
+      <section class="slide-view" id="slide-4">
+        <div class="slide-header">
+          <h1 class="slide-headline"><span>🧪</span> Comprehension Check: Predict the Output</h1>
+          <div class="bilingual-chip">
+            <span class="en-term">Quiz</span>: <bdi class="rtl-term" dir="rtl">שאלות הבנה / أسئلة الفهم</bdi>
+          </div>
+        </div>
+
+        <div class="quiz-container">
+          <!-- Quiz 1 -->
+          <div class="quiz-card">
+            <div class="quiz-question">Question 1: What prints to console?</div>
+            <div class="card-code" style="border-radius: 8px;">
+              <pre><span class="code-type">double</span> score = <span class="code-number">8.95</span>;
+<span class="code-type">int</span> result   = (<span class="code-type">int</span>)score;
+<span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(result);</pre>
+            </div>
+            <button class="reveal-btn" data-target="ans-1">
+              <span>👁️</span> Click to Reveal Answer
+            </button>
+            <div class="answer-panel" id="ans-1">
+              <strong>Answer: 8</strong> (Not 9!)<br>
+              <span style="font-size: 0.95rem; color: #cbd5e1;">Explicit cast <code>(int)</code> truncates the <code>.95</code> completely; it never rounds up.</span>
+            </div>
+          </div>
+
+          <!-- Quiz 2 -->
+          <div class="quiz-card">
+            <div class="quiz-question">Question 2: Text concatenation or math?</div>
+            <div class="card-code" style="border-radius: 8px;">
+              <pre><span class="code-type">string</span> a = <span class="code-string">"10"</span>;
+<span class="code-type">string</span> b = <span class="code-string">"20"</span>;
+<span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(a + b);</pre>
+            </div>
+            <button class="reveal-btn" data-target="ans-2">
+              <span>👁️</span> Click to Reveal Answer
+            </button>
+            <div class="answer-panel" id="ans-2">
+              <strong>Answer: "1020"</strong><br>
+              <span style="font-size: 0.95rem; color: #cbd5e1;">Because both are <code>string</code>, <code>+</code> joins text. To get 30, use <code>int.Parse(a) + int.Parse(b)</code>.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="key-idea-banner">
+          <span>🚀</span>
+          <div><strong>Challenge:</strong> Predict the output of <code>(double)(7 / 2)</code> vs <code>(double)7 / 2</code> in your head!</div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer Controls -->
+    <footer class="deck-footer">
+      <div>
+        <span class="key-badge">◀ Left Arrow</span>
+        <span class="key-badge">Right Arrow ▶</span>
+        <span class="key-badge">Space</span>
+      </div>
+
+      <div class="nav-buttons">
+        <button class="nav-btn" id="prevBtn" disabled>
+          <span>◀</span> Prev
+        </button>
+        <button class="nav-btn primary" id="nextBtn">
+          Next <span>▶</span>
+        </button>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    (function() {
+      const totalSlides = 5;
+      let currentSlide = 0;
+
+      const slides = document.querySelectorAll('.slide-view');
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      const slideCounter = document.getElementById('slideCounter');
+      const progressFill = document.getElementById('progressFill');
+
+      function updateSlide(newIndex) {
+        if (newIndex < 0 || newIndex >= totalSlides) return;
+
+        slides[currentSlide].classList.remove('active');
+        currentSlide = newIndex;
+        slides[currentSlide].classList.add('active');
+
+        slideCounter.textContent = 'Slide ' + (currentSlide + 1) + ' of ' + totalSlides;
+        const percent = ((currentSlide + 1) / totalSlides) * 100;
+        progressFill.style.width = percent + '%';
+
+        prevBtn.disabled = (currentSlide === 0);
+        if (currentSlide === totalSlides - 1) {
+          nextBtn.innerHTML = 'Restart <span>↺</span>';
+        } else {
+          nextBtn.innerHTML = 'Next <span>▶</span>';
+        }
+      }
+
+      prevBtn.addEventListener('click', function() {
+        updateSlide(currentSlide - 1);
+      });
+
+      nextBtn.addEventListener('click', function() {
+        if (currentSlide < totalSlides - 1) {
+          updateSlide(currentSlide + 1);
+        } else {
+          updateSlide(0);
+        }
+      });
+
+      window.addEventListener('keydown', function(e) {
+        if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
+
+        if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+          e.preventDefault();
+          if (currentSlide < totalSlides - 1) updateSlide(currentSlide + 1);
+        } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+          e.preventDefault();
+          if (currentSlide > 0) updateSlide(currentSlide - 1);
+        } else if (e.key === 'Home') {
+          e.preventDefault();
+          updateSlide(0);
+        } else if (e.key === 'End') {
+          e.preventDefault();
+          updateSlide(totalSlides - 1);
+        }
+      });
+
+      const revealBtns = document.querySelectorAll('.reveal-btn');
+      revealBtns.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          const targetId = this.getAttribute('data-target');
+          const panel = document.getElementById(targetId);
+          if (panel) {
+            const isShowing = panel.classList.contains('show');
+            if (isShowing) {
+              panel.classList.remove('show');
+              this.innerHTML = '<span>👁️</span> Click to Reveal Answer';
+            } else {
+              panel.classList.add('show');
+              this.innerHTML = '<span>🙈</span> Hide Answer';
+            }
+          }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
