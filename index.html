@@ -532,9 +532,9 @@
           </div>
         </div>
         <div class="header-actions">
-          <span class="gh-source-badge" id="ghSourceBadge">Source: Local / Manifest</span>
+          <span class="gh-source-badge" id="ghSourceBadge">Source: Detecting...</span>
           <span class="stats-badge" id="statsBadge">Loading...</span>
-          <button class="btn" id="refreshBtn" title="Rescan Repository or Directory">
+          <button class="btn" id="refreshBtn" title="Rescan Repository">
             <span>🔄</span> Rescan
           </button>
           <button class="btn" id="toggleConfigBtn" title="GitHub / File Settings">
@@ -546,12 +546,12 @@
       <!-- Settings / Custom GitHub Repository Drawer -->
       <div class="config-drawer" id="configDrawer">
         <div style="font-size: 0.9rem; color: #cbd5e1;">
-          <strong>Dynamic GitHub Pages Auto-Discovery:</strong> When published to GitHub Pages, this page automatically reads your repository files via the GitHub API. You can also manually specify your repo:
+          <strong>Dynamic GitHub Pages Auto-Discovery:</strong> Automatically queries the GitHub API for your repository to find all presentation files. You can also manually configure a repository:
         </div>
         <div class="config-inputs-row">
-          <input type="text" class="text-field" id="ghRepoInput" placeholder="username/repository (e.g. yourname/csharp-lessons)">
-          <button class="btn btn-primary" id="saveGhRepoBtn">Load from GitHub</button>
-          <button class="btn" id="addFileManualBtn">➕ Add File Name</button>
+          <input type="text" class="text-field" id="ghRepoInput" placeholder="username/repository (e.g. shadiammouri/csharp-examples)">
+          <button class="btn btn-primary" id="saveGhRepoBtn">Sync with Repository</button>
+          <button class="btn" id="addFileManualBtn">➕ Add File Manually</button>
           <button class="btn" id="closeConfigBtn">Close</button>
         </div>
       </div>
@@ -574,8 +574,8 @@
       <!-- Empty State -->
       <div class="empty-state" id="emptyState">
         <div style="font-size: 2.5rem; color: var(--text-muted);">📂</div>
-        <h2 style="font-size: 1.2rem; color: #ffffff;">No presentations match your search</h2>
-        <p style="font-size: 0.9rem; color: var(--text-muted);">Try a different keyword or click "Rescan" to reload the repository list.</p>
+        <h2 style="font-size: 1.2rem; color: #ffffff;">No presentations found</h2>
+        <p style="font-size: 0.9rem; color: var(--text-muted);">Try a different search query or click "Rescan" to reload from GitHub.</p>
       </div>
     </main>
   </div>
@@ -605,21 +605,29 @@
 
   <script>
     (function() {
-      // Default presentations in project
-      const DEFAULT_FILES = [
-        {
-          file: 'csharp_data_types_lesson.html',
+      // Known presentation metadata dictionary for rich presentation titles and descriptions
+      const KNOWN_METADATA = {
+        '01-c_data_types_casting.html': {
+          title: '01. C# Data Types & Type Casting',
+          description: 'Introduction to int, double, and string types, implicit and explicit casting, double.Parse(), and integer division traps.',
+          tags: ['5 Slides', 'Data Types', 'double & int', 'Bilingual HE/AR']
+        },
+        '02-c_math_operations_console_io.html': {
+          title: '02. Math Operations & Console I/O',
+          description: 'Core arithmetic operators (+, -, *, /, %), dedicated Console.Write/ReadLine breakdown, and 5 interactive code examples.',
+          tags: ['5 Slides', 'Arithmetic', 'Console I/O', 'Bilingual HE/AR']
+        },
+        'csharp_data_types_lesson.html': {
           title: 'C# Data Types & Type Casting',
           description: 'Introduction to int, double, and string types, implicit and explicit casting, double.Parse(), and integer division traps.',
           tags: ['5 Slides', 'Data Types', 'double & int', 'Bilingual HE/AR']
         },
-        {
-          file: 'csharp_math_console_lesson.html',
+        'csharp_math_console_lesson.html': {
           title: 'Math Operations & Console I/O',
           description: 'Core arithmetic operators (+, -, *, /, %), dedicated Console.Write/ReadLine breakdown, and 5 interactive code examples.',
           tags: ['5 Slides', 'Arithmetic', 'Console I/O', 'Bilingual HE/AR']
         }
-      ];
+      };
 
       // State
       let filesList = [];
@@ -660,10 +668,37 @@
       }
 
       function formatTitle(filename) {
-        return filename
-          .replace(/\.html$/i, '')
+        // Remove .html, numbers, and format nicely
+        let clean = filename.replace(/\.html$/i, '');
+        let prefix = '';
+        const match = clean.match(/^(\d+)[\-_](.*)$/);
+        if (match) {
+          prefix = match[1] + '. ';
+          clean = match[2];
+        }
+        return prefix + clean
           .replace(/[_-]/g, ' ')
+          .replace(/\bc\b/gi, 'C#')
+          .replace(/\bio\b/gi, 'I/O')
           .replace(/\b\w/g, function(l) { return l.toUpperCase(); });
+      }
+
+      function buildItemMetadata(filename) {
+        const lower = filename.toLowerCase();
+        if (KNOWN_METADATA[lower]) {
+          return {
+            file: filename,
+            title: KNOWN_METADATA[lower].title,
+            description: KNOWN_METADATA[lower].description,
+            tags: KNOWN_METADATA[lower].tags
+          };
+        }
+        return {
+          file: filename,
+          title: formatTitle(filename),
+          description: 'Interactive projector-friendly C# slide presentation.',
+          tags: ['HTML Presentation', 'C# Lesson']
+        };
       }
 
       // Detect if running on GitHub Pages
@@ -685,31 +720,16 @@
         return '';
       }
 
-      // Initialize initial files list
-      function initList() {
-        let stored = [];
-        try {
-          const raw = localStorage.getItem('csharp_files_manifest');
-          if (raw) stored = JSON.parse(raw);
-        } catch (e) {}
-
-        const map = new Map();
-        DEFAULT_FILES.forEach(function(item) { map.set(item.file, item); });
-        stored.forEach(function(item) { if (!map.has(item.file)) map.set(item.file, item); });
-
-        filesList = Array.from(map.values());
-      }
-
       function persistList() {
         try {
           localStorage.setItem('csharp_files_manifest', JSON.stringify(filesList));
         } catch (e) {}
       }
 
-      // Query GitHub API dynamically for all .html files
+      // Query GitHub API dynamically for all .html files in repository
       async function fetchFromGitHub(repoString) {
         if (!repoString) return false;
-        showToast('Connecting to GitHub API for ' + repoString + '...');
+        showToast('Syncing with GitHub repository ' + repoString + '...');
 
         try {
           const apiUrl = 'https://api.github.com/repos/' + repoString + '/contents/';
@@ -717,31 +737,30 @@
           if (res.ok) {
             const data = await res.json();
             if (Array.isArray(data)) {
-              let added = 0;
+              const gitHubFiles = [];
+
               data.forEach(function(item) {
                 if (item.type === 'file' && item.name.endsWith('.html') && item.name.toLowerCase() !== 'index.html') {
-                  const existing = filesList.find(function(f) { return f.file === item.name; });
-                  if (!existing) {
-                    filesList.push({
-                      file: item.name,
-                      title: formatTitle(item.name),
-                      description: 'Presentation hosted on GitHub repository (' + repoString + ').',
-                      tags: ['GitHub Hosted', 'HTML Presentation']
-                    });
-                    added++;
-                  }
+                  gitHubFiles.push(buildItemMetadata(item.name));
                 }
               });
 
+              // Sort by filename (so 01-, 02- appear in lesson order)
+              gitHubFiles.sort(function(a, b) {
+                return a.file.localeCompare(b.file, undefined, { numeric: true });
+              });
+
+              // When GitHub succeeds, replace the list completely so no dead links ever remain!
+              filesList = gitHubFiles;
               ghSourceBadge.textContent = 'GitHub: ' + repoString;
               persistList();
               renderGrid();
-              showToast('Synced from GitHub! Found ' + added + ' new file(s).');
+              showToast('Synced! Loaded ' + filesList.length + ' presentation(s) from GitHub.');
               return true;
             }
           }
         } catch (err) {
-          // fallback to local
+          // fallback to local directory or cache
         }
         return false;
       }
@@ -750,37 +769,43 @@
       async function scanLocalDirectory() {
         showToast('Scanning directory for presentations...');
         try {
-          const dirUrl = new URL('.', window.location.href).href; const res = await fetch(dirUrl, { cache: 'no-cache' });
+          const dirUrl = new URL('.', window.location.href).href;
+          const res = await fetch(dirUrl, { cache: 'no-cache' });
           if (res.ok) {
             const text = await res.text();
             const doc = new DOMParser().parseFromString(text, 'text/html');
             const links = doc.querySelectorAll('a[href]');
-            let count = 0;
+            const foundFiles = [];
 
             links.forEach(function(a) {
               const href = a.getAttribute('href');
               if (href && href.endsWith('.html') && !href.startsWith('http') && href !== 'index.html') {
                 const clean = href.split('?')[0].split('#')[0].replace(/^\.\//, '');
-                if (!filesList.some(function(f) { return f.file === clean; })) {
-                  filesList.push({
-                    file: clean,
-                    title: formatTitle(clean),
-                    description: 'Local HTML presentation in project directory.',
-                    tags: ['HTML Presentation', 'Auto-Detected']
-                  });
-                  count++;
+                if (!foundFiles.some(function(f) { return f.file === clean; })) {
+                  foundFiles.push(buildItemMetadata(clean));
                 }
               }
             });
 
-            if (count > 0) {
+            if (foundFiles.length > 0) {
+              filesList = foundFiles;
               persistList();
-              showToast('Discovered ' + count + ' local HTML presentation(s).');
+              ghSourceBadge.textContent = 'Source: Local Directory';
+              showToast('Discovered ' + foundFiles.length + ' presentation(s).');
+              renderGrid();
+              return;
             }
           }
         } catch (e) {}
 
-        renderGrid();
+        // If local scan also didn't return a listing, use verified local fallback files
+        if (filesList.length === 0) {
+          filesList = [
+            buildItemMetadata('01-c_data_types_casting.html'),
+            buildItemMetadata('02-c_math_operations_console_io.html')
+          ];
+          renderGrid();
+        }
       }
 
       async function refreshAll() {
@@ -948,12 +973,7 @@
         if (!fileName.endsWith('.html')) fileName += '.html';
 
         if (!filesList.some(function(f) { return f.file.toLowerCase() === fileName.toLowerCase(); })) {
-          filesList.unshift({
-            file: fileName,
-            title: formatTitle(fileName),
-            description: 'Custom added presentation file in this project.',
-            tags: ['Custom File', 'HTML Presentation']
-          });
+          filesList.unshift(buildItemMetadata(fileName));
           persistList();
           renderGrid();
           ghRepoInput.value = '';
@@ -964,13 +984,16 @@
         }
       });
 
+      // Clear any stale cached files from localStorage to prevent duplicate dead links
+      try {
+        localStorage.removeItem('csharp_files_manifest');
+      } catch (e) {}
+
       // Startup
-      initList();
       detectedRepo = detectGitHubEnvironment();
       if (detectedRepo) {
-        ghSourceBadge.textContent = 'GitHub: ' + detectedRepo;
+        ghSourceBadge.textContent = 'Connecting: ' + detectedRepo;
       }
-      renderGrid();
       refreshAll();
 
     })();
