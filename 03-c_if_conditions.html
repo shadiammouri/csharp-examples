@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C# If Conditions - 10th Grade Computer Science</title>
+  <style>
+    :root {
+      --bg-dark: #0a0e1a;
+      --card-bg: #121929;
+      --card-border: #26354f;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-cyan: #38bdf8;
+      --accent-purple: #c084fc;
+      --accent-emerald: #34d399;
+      --accent-amber: #fbbf24;
+      --accent-rose: #f43f5e;
+      --code-bg: #030712;
+      --keyword-color: #f472b6;
+      --type-color: #38bdf8;
+      --string-color: #a3e635;
+      --number-color: #fb923c;
+      --comment-color: #64748b;
+      --method-color: #fbbf24;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+      overflow-x: hidden;
+    }
+
+    /* 16:9 Projector Widescreen Container */
+    .presentation-container {
+      width: 100%;
+      max-width: 1200px;
+      min-height: 680px;
+      aspect-ratio: 16 / 9;
+      background: var(--card-bg);
+      border: 2px solid var(--card-border);
+      border-radius: 18px;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Top Navigation Header */
+    .presentation-header {
+      padding: 14px 28px;
+      background: rgba(10, 14, 26, 0.88);
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .topic-pill {
+      background: rgba(56, 189, 248, 0.2);
+      color: var(--accent-cyan);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      padding: 4px 12px;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .slide-counter {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      background: rgba(15, 23, 42, 0.8);
+      padding: 5px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--card-border);
+    }
+
+    .progress-bar {
+      height: 5px;
+      background: #1e293b;
+      width: 100%;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+      width: 20%;
+      transition: width 0.3s ease;
+    }
+
+    /* Slide Viewport */
+    .slide-viewport {
+      flex: 1;
+      padding: 24px 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+
+    .slide-view {
+      display: none;
+      flex-direction: column;
+      height: 100%;
+      animation: fadeIn 0.25s ease-out forwards;
+      justify-content: space-between;
+    }
+
+    .slide-view.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Slide Titles & Badges */
+    .slide-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .slide-headline {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .bilingual-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(192, 132, 252, 0.4);
+      padding: 4px 12px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+    }
+
+    .bilingual-chip .en-term {
+      color: var(--accent-cyan);
+      font-weight: 700;
+    }
+
+    .bilingual-chip .lang-tag {
+      font-size: 0.8rem;
+      color: var(--accent-amber);
+    }
+
+    .bilingual-chip .rtl-term {
+      color: #f1f5f9;
+      font-weight: 600;
+    }
+
+    /* Code Card Grids */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      flex: 1;
+      align-items: stretch;
+    }
+
+    .code-card {
+      background: var(--code-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .card-top {
+      padding: 10px 16px;
+      background: rgba(255, 255, 255, 0.04);
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .card-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-code {
+      padding: 14px 16px;
+      flex: 1;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 1.05rem;
+      line-height: 1.55;
+      color: #e2e8f0;
+      overflow-x: auto;
+    }
+
+    .card-code pre {
+      margin: 0;
+      white-space: pre;
+    }
+
+    .card-output {
+      padding: 8px 16px;
+      background: rgba(30, 41, 59, 0.65);
+      border-top: 1px solid #1e293b;
+      font-family: Consolas, monospace;
+      font-size: 0.95rem;
+      color: var(--accent-emerald);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Key Idea / Takeaway Banner */
+    .key-idea-banner {
+      background: rgba(56, 189, 248, 0.1);
+      border-left: 5px solid var(--accent-cyan);
+      padding: 10px 18px;
+      border-radius: 0 10px 10px 0;
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: #f1f5f9;
+      margin-top: 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .key-idea-banner strong {
+      color: var(--accent-cyan);
+    }
+
+    /* Syntax Tokens */
+    .code-keyword { color: var(--keyword-color); font-weight: 700; }
+    .code-type { color: var(--type-color); font-weight: 700; }
+    .code-string { color: var(--string-color); }
+    .code-number { color: var(--number-color); font-weight: 600; }
+    .code-comment { color: var(--comment-color); font-style: italic; }
+    .code-method { color: var(--method-color); }
+
+    /* Interactive Quiz */
+    .quiz-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      flex: 1;
+    }
+
+    .quiz-card {
+      background: var(--code-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 16px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .quiz-question {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 10px;
+    }
+
+    .reveal-btn {
+      background: rgba(192, 132, 252, 0.2);
+      border: 1px solid var(--accent-purple);
+      color: var(--accent-purple);
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+      align-self: flex-start;
+      margin-top: 10px;
+    }
+
+    .reveal-btn:hover {
+      background: rgba(192, 132, 252, 0.35);
+      transform: translateY(-2px);
+    }
+
+    .answer-panel {
+      display: none;
+      background: rgba(34, 197, 94, 0.15);
+      border-left: 4px solid var(--accent-emerald);
+      padding: 10px 14px;
+      border-radius: 0 8px 8px 0;
+      font-size: 1.05rem;
+      color: #dcfce7;
+      margin-top: 10px;
+    }
+
+    .answer-panel.show {
+      display: block;
+    }
+
+    /* Footer Controls */
+    .presentation-footer {
+      padding: 14px 28px;
+      background: rgba(10, 14, 26, 0.9);
+      border-top: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .key-badge {
+      background: #1e293b;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-family: monospace;
+      color: #94a3b8;
+      border: 1px solid #334155;
+      font-size: 0.85rem;
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: 12px;
+    }
+
+    .nav-btn {
+      background: #1e293b;
+      border: 1px solid var(--card-border);
+      color: #ffffff;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .nav-btn:hover:not(:disabled) {
+      background: #334155;
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    .nav-btn.primary {
+      background: var(--accent-cyan);
+      color: #0b0f19;
+      border-color: var(--accent-cyan);
+    }
+
+    .nav-btn.primary:hover:not(:disabled) {
+      background: #7dd3fc;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="presentation-container">
+    <!-- Header -->
+    <header class="presentation-header">
+      <span class="topic-pill">C# Control Flow &bull; 10th Grade CS</span>
+      <div class="slide-counter" id="slideCounter">Slide 1 of 5</div>
+    </header>
+
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <!-- Main Viewport -->
+    <main class="slide-viewport">
+
+      <!-- SLIDE 1: The Anatomy of an if Statement -->
+      <section class="slide-view active" id="slide-0">
+        <div class="slide-header">
+          <h1 class="slide-headline"><span>🚦</span> The C# "if" Statement</h1>
+          <div class="bilingual-chip">
+            <span class="en-term">Condition</span>
+            <span class="lang-tag">HE:</span> <bdi class="rtl-term" dir="rtl">תנאי</bdi>
+            <span class="lang-tag">AR:</span> <bdi class="rtl-term" dir="rtl">شرط</bdi>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <!-- Syntax Blueprint -->
+          <div class="code-card">
+            <div class="card-top">
+              <span class="card-title">Syntax Blueprint</span>
+            </div>
+            <div class="card-code">
+              <pre><span class="code-comment">// Condition inside ( ) must evaluate to true/false:</span>
+<span class="code-keyword">if</span> (booleanCondition)
+{
+    <span class="code-comment">// Code runs ONLY if condition is true!</span>
+}
+
+<span class="code-comment">// Comparison Operators:</span>
+<span class="code-comment">// == (equals)       != (not equals)</span>
+<span class="code-comment">// &gt;  (greater)      &lt;  (less)</span>
+<span class="code-comment">// &gt;= (greater/eq)   &lt;= (less/eq)</span></pre>
+            </div>
+            <div class="card-output">
+              <span>&gt; HE: תנאי בוליאני | AR: شرط منطقي</span>
+            </div>
+          </div>
+
+          <!-- Working Example -->
+          <div class="code-card">
+            <div class="card-top">
+              <span class="card-title">Example 1: Health Alert</span>
+            </div>
+            <div class="card-code">
+              <pre><span class="code-type">int</span> playerHealth = <span class="code-number">18</span>;
+
+<span class="code-comment">// Check if health dropped to critical level:</span>
+<span class="code-keyword">if</span> (playerHealth &lt;= <span class="code-number">20</span>)
+{
+    <span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">"⚠️ WARNING: Low Health!"</span>);
+    <span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">"Drink a potion immediately!"</span>);
+}
+
+<span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">"Game continues..."</span>);</pre>
+            </div>
+            <div class="card-output">
+              <span>&gt; Output: ⚠️ WARNING: Low Health!</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="key-idea-banner">
+          <span>💡</span>
+          <div><strong>Core Idea:</strong> If the condition is <code>true</code>, the block inside <code>{ }</code> executes. If <code>false</code>, C# completely skips it!</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 2: Two-Way Branching: if / else -->
+      <section class="slide-view" id="slide-1">
+        <div class="slide-header">
+          <h1 class="slide-headline"><span>🔀</span> Two-Way Decisions: if / else</h1>
+          <div class="bilingual-chip">
+            <span class="en-term">Branching</span>
+            <span class="lang-tag">HE:</span> <bdi class="rtl-term" dir="rtl">הסתעפות</bdi>
+            <span class="lang-tag">AR:</span> <bdi class="rtl-term" dir="rtl">تفريع</bdi>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <!-- Example 2: Age Verification -->
+          <div class="code-card">
+            <div class="card-top">
+              <span class="card-title">Ex 2: Game Age Verification</span>
+            </div>
+            <div class="card-code">
+              <pre><span class="code-type">int</span> userAge = <span class="code-number">15</span>;
+
+<span class="code-keyword">if</span> (userAge &gt;= <span class="code-number">16</span>)
+{
+    <span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">"Access Granted: Welcome to the server!"</span>);
+}
+<span class="code-keyword">else</span>
+{
+    <span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">"Access Denied: Must be 16 or older."</span>);
+}</pre>
+            </div>
+            <div class="card-output">
+              <span>&gt; Output: Access Denied: Must be 16 or older.</span>
+            </div>
+          </div>
+
+          <!-- Example 3: Even or Odd Checker -->
+          <div class="code-card">
+            <div class="card-top">
+              <span class="card-title">Ex 3: Even or Odd Number (% 2)</span>
+            </div>
+            <div class="card-code">
+              <pre><span class="code-type">int</span> number = <span class="code-number">27</span>;
+
+<span class="code-comment">// Divisible by 2 with remainder 0?</span>
+<span class="code-keyword">if</span> (number % <span class="code-number">2</span> == <span class="code-number">0</span>)
+{
+    <span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">$"{number} is Even (זוגי / زوجي)"</span>);
+}
+<span class="code-keyword">else</span>
+{
+    <span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">$"{number} is Odd (אי-זוגי / فردي)"</span>);
+}</pre>
+            </div>
+            <div class="card-output">
+              <span>&gt; Output: 27 is Odd</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="key-idea-banner">
+          <span>🎯</span>
+          <div><strong>Rule:</strong> Exactly one branch runs! If <code>if</code> evaluates to <code>false</code>, C# automatically defaults to the <code>else</code> branch.</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 3: Multi-Way Branching: else if Ladder -->
+      <section class="slide-view" id="slide-2">
+        <div class="slide-header">
+          <h1 class="slide-headline"><span>🪜</span> Multi-Way Choices: else if</h1>
+          <div class="bilingual-chip">
+            <span class="en-term">Multiple Cases</span>
+            <span class="lang-tag">HE:</span> <bdi class="rtl-term" dir="rtl">ריבוי תנאים</bdi>
+            <span class="lang-tag">AR:</span> <bdi class="rtl-term" dir="rtl">شروط متعددة</bdi>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <!-- Example 4: Grade Evaluation -->
+          <div class="code-card">
+            <div class="card-top">
+              <span class="card-title">Ex 4: Score Rating Ladder</span>
+            </div>
+            <div class="card-code">
+              <pre><span class="code-type">int</span> examScore = <span class="code-number">84</span>;
+
+<span class="code-keyword">if</span> (examScore &gt;= <span class="code-number">90</span>)
+{
+    <span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">"Rating: Excellent (A)"</span>);
+}
+<span class="code-keyword">else if</span> (examScore &gt;= <span class="code-number">80</span>)
+{
+    <span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">"Rating: Very Good (B)"</span>);
+}
+<span class="code-keyword">else if</span> (examScore &gt;= <span class="code-number">70</span>)
+{
+    <span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">"Rating: Good (C)"</span>);
+}
+<span class="code-keyword">else</span>
+{
+    <span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">"Rating: Keep Practicing"</span>);
+}</pre>
+            </div>
+            <div class="card-output">
+              <span>&gt; Output: Rating: Very Good (B)</span>
+            </div>
+          </div>
+
+          <!-- Example 5: Speed Radar -->
+          <div class="code-card">
+            <div class="card-top">
+              <span class="card-title">Ex 5: Traffic Speed Monitor</span>
+            </div>
+            <div class="card-code">
+              <pre><span class="code-type">double</span> currentSpeed = <span class="code-number">125.5</span>;
+
+<span class="code-keyword">if</span> (currentSpeed &gt; <span class="code-number">120.0</span>)
+{
+    <span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">"🚨 Danger: Speeding Ticket Issued!"</span>);
+}
+<span class="code-keyword">else if</span> (currentSpeed &gt;= <span class="code-number">90.0</span>)
+{
+    <span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">"Highway Cruising Speed."</span>);
+}
+<span class="code-keyword">else</span>
+{
+    <span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">"City / Residential Speed."</span>);
+}</pre>
+            </div>
+            <div class="card-output">
+              <span>&gt; Output: 🚨 Danger: Speeding Ticket Issued!</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="key-idea-banner">
+          <span>⚡</span>
+          <div><strong>Order Matters:</strong> C# tests conditions top-to-bottom. The moment one condition matches, its block runs and all others are skipped!</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 4: Combining Conditions: && and || -->
+      <section class="slide-view" id="slide-3">
+        <div class="slide-header">
+          <h1 class="slide-headline"><span>🔗</span> Compound Conditions: &amp;&amp; and ||</h1>
+          <div class="bilingual-chip">
+            <span class="en-term">Logical AND / OR</span>
+            <span class="lang-tag">HE:</span> <bdi class="rtl-term" dir="rtl">וגם / או</bdi>
+            <span class="lang-tag">AR:</span> <bdi class="rtl-term" dir="rtl">و / أو</bdi>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <!-- Logical AND (&&) -->
+          <div class="code-card">
+            <div class="card-top">
+              <span class="card-title">&amp;&amp; (AND) - Both Must Be True</span>
+            </div>
+            <div class="card-code">
+              <pre><span class="code-type">bool</span> hasBossKey  = <span class="code-keyword">true</span>;
+<span class="code-type">int</span>  playerLevel = <span class="code-number">8</span>;
+
+<span class="code-comment">// Requires BOTH key AND level 5 or higher:</span>
+<span class="code-keyword">if</span> (hasBossKey &amp;&amp; playerLevel &gt;= <span class="code-number">5</span>)
+{
+    <span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">"Dungeon Door Unlocked! Enter."</span>);
+}
+<span class="code-keyword">else</span>
+{
+    <span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">"Door Locked: Need Boss Key AND Level 5+."</span>);
+}</pre>
+            </div>
+            <div class="card-output">
+              <span>&gt; Output: Dungeon Door Unlocked! Enter.</span>
+            </div>
+          </div>
+
+          <!-- Logical OR (||) -->
+          <div class="code-card">
+            <div class="card-top">
+              <span class="card-title">|| (OR) - At Least One Must Be True</span>
+            </div>
+            <div class="card-code">
+              <pre><span class="code-type">bool</span> isSaturday = <span class="code-keyword">true</span>;
+<span class="code-type">bool</span> isHoliday  = <span class="code-keyword">false</span>;
+
+<span class="code-comment">// Either Saturday OR Holiday is enough:</span>
+<span class="code-keyword">if</span> (isSaturday || isHoliday)
+{
+    <span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">"No school today! Time to code projects."</span>);
+}
+<span class="code-keyword">else</span>
+{
+    <span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">"Regular school day."</span>);
+}</pre>
+            </div>
+            <div class="card-output">
+              <span>&gt; Output: No school today! Time to code projects.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="key-idea-banner">
+          <span>🧠</span>
+          <div><strong>Quick Cheat:</strong> <code>&amp;&amp;</code> is strict (all conditions must be true). <code>||</code> is flexible (at least one true condition activates the block).</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 5: Comprehension Check Quiz -->
+      <section class="slide-view" id="slide-4">
+        <div class="slide-header">
+          <h1 class="slide-headline"><span>🧪</span> Comprehension Check: Predict the Flow</h1>
+          <div class="bilingual-chip">
+            <span class="en-term">Class Quiz</span>
+            <span class="lang-tag">HE:</span> <bdi class="rtl-term" dir="rtl">שאלות הבנה</bdi>
+            <span class="lang-tag">AR:</span> <bdi class="rtl-term" dir="rtl">أسئلة الفهم</bdi>
+          </div>
+        </div>
+
+        <div class="quiz-container">
+          <!-- Quiz 1: The Order Trap -->
+          <div class="quiz-card">
+            <div class="quiz-question">Question 1: What prints to the console?</div>
+            <div class="card-code" style="border-radius: 8px;">
+              <pre><span class="code-type">int</span> score = <span class="code-number">95</span>;
+
+<span class="code-keyword">if</span> (score &gt;= <span class="code-number">70</span>)
+{
+    <span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">"Pass"</span>);
+}
+<span class="code-keyword">else if</span> (score &gt;= <span class="code-number">90</span>)
+{
+    <span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">"Honor Roll"</span>);
+}</pre>
+            </div>
+            <button class="reveal-btn" data-target="ans-1">
+              <span>👁️</span> Click to Reveal Answer
+            </button>
+            <div class="answer-panel" id="ans-1">
+              <strong>Answer: "Pass" (Not Honor Roll!)</strong><br>
+              <span style="font-size: 0.95rem; color: #cbd5e1;">Because <code>95 &gt;= 70</code> is checked first, C# enters the first branch immediately and ignores all subsequent <code>else if</code> blocks! Always place stricter conditions (90+) before broader ones (70+).</span>
+            </div>
+          </div>
+
+          <!-- Quiz 2: Compound Evaluation -->
+          <div class="quiz-card">
+            <div class="quiz-question">Question 2: Does the alarm sound?</div>
+            <div class="card-code" style="border-radius: 8px;">
+              <pre><span class="code-type">int</span> speed = <span class="code-number">85</span>;
+<span class="code-type">bool</span> hasSeatbelt = <span class="code-keyword">false</span>;
+
+<span class="code-keyword">if</span> (speed &gt; <span class="code-number">80</span> &amp;&amp; !hasSeatbelt)
+{
+    <span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">"BEEP! Buckle up!"</span>);
+}
+<span class="code-keyword">else</span>
+{
+    <span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">"All clear."</span>);
+}</pre>
+            </div>
+            <button class="reveal-btn" data-target="ans-2">
+              <span>👁️</span> Click to Reveal Answer
+            </button>
+            <div class="answer-panel" id="ans-2">
+              <strong>Answer: "BEEP! Buckle up!"</strong><br>
+              <span style="font-size: 0.95rem; color: #cbd5e1;"><code>speed &gt; 80</code> is true (85 &gt; 80), and <code>!hasSeatbelt</code> is true (NOT false is true). Since both sides of <code>&amp;&amp;</code> are true, the alarm triggers.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="key-idea-banner">
+          <span>🚀</span>
+          <div><strong>Coding Challenge:</strong> Write an <code>if/else</code> check that asks for a student's age and ticket type, and grants discounted entry if <code>age &lt; 18 || isStudent</code>!</div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer Controls -->
+    <footer class="presentation-footer">
+      <div>
+        <span class="key-badge">◀ Left Arrow</span>
+        <span class="key-badge">Right Arrow ▶</span>
+        <span class="key-badge">Space</span>
+      </div>
+
+      <div class="nav-buttons">
+        <button class="nav-btn" id="prevBtn" disabled>
+          <span>◀</span> Prev
+        </button>
+        <button class="nav-btn primary" id="nextBtn">
+          Next <span>▶</span>
+        </button>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    (function() {
+      const totalSlides = 5;
+      let currentSlide = 0;
+
+      const slides = document.querySelectorAll('.slide-view');
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      const slideCounter = document.getElementById('slideCounter');
+      const progressFill = document.getElementById('progressFill');
+
+      function updateSlide(newIndex) {
+        if (newIndex < 0 || newIndex >= totalSlides) return;
+
+        slides[currentSlide].classList.remove('active');
+        currentSlide = newIndex;
+        slides[currentSlide].classList.add('active');
+
+        slideCounter.textContent = 'Slide ' + (currentSlide + 1) + ' of ' + totalSlides;
+        const percent = ((currentSlide + 1) / totalSlides) * 100;
+        progressFill.style.width = percent + '%';
+
+        prevBtn.disabled = (currentSlide === 0);
+        if (currentSlide === totalSlides - 1) {
+          nextBtn.innerHTML = 'Restart <span>↺</span>';
+        } else {
+          nextBtn.innerHTML = 'Next <span>▶</span>';
+        }
+      }
+
+      prevBtn.addEventListener('click', function() {
+        updateSlide(currentSlide - 1);
+      });
+
+      nextBtn.addEventListener('click', function() {
+        if (currentSlide < totalSlides - 1) {
+          updateSlide(currentSlide + 1);
+        } else {
+          updateSlide(0);
+        }
+      });
+
+      window.addEventListener('keydown', function(e) {
+        if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
+
+        if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+          e.preventDefault();
+          if (currentSlide < totalSlides - 1) updateSlide(currentSlide + 1);
+        } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+          e.preventDefault();
+          if (currentSlide > 0) updateSlide(currentSlide - 1);
+        } else if (e.key === 'Home') {
+          e.preventDefault();
+          updateSlide(0);
+        } else if (e.key === 'End') {
+          e.preventDefault();
+          updateSlide(totalSlides - 1);
+        }
+      });
+
+      const revealBtns = document.querySelectorAll('.reveal-btn');
+      revealBtns.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          const targetId = this.getAttribute('data-target');
+          const panel = document.getElementById(targetId);
+          if (panel) {
+            const isShowing = panel.classList.contains('show');
+            if (isShowing) {
+              panel.classList.remove('show');
+              this.innerHTML = '<span>👁️</span> Click to Reveal Answer';
+            } else {
+              panel.classList.add('show');
+              this.innerHTML = '<span>🙈</span> Hide Answer';
+            }
+          }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
