@@ -3,12 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>C# Data Types &amp; Casting - Projector Presentation</title>
+  <title>C# Course Presentations - GitHub Portal</title>
   <style>
     :root {
-      --bg-dark: #0b0f19;
-      --card-bg: #141c2e;
-      --card-border: #2d3b55;
+      --bg-dark: #0a0e1a;
+      --card-bg: #121929;
+      --card-border: #26354f;
+      --card-hover: #1a243a;
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
       --accent-cyan: #38bdf8;
@@ -17,11 +18,6 @@
       --accent-amber: #fbbf24;
       --accent-rose: #f43f5e;
       --code-bg: #030712;
-      --keyword-color: #f472b6;
-      --type-color: #38bdf8;
-      --string-color: #a3e635;
-      --number-color: #fb923c;
-      --comment-color: #64748b;
     }
 
     * {
@@ -37,777 +33,946 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 12px;
+      padding: 24px;
       overflow-x: hidden;
     }
 
-    /* Projector-optimized 16:9 widescreen container */
-    .deck-container {
+    .container {
       width: 100%;
-      max-width: 1180px;
-      min-height: 670px;
-      aspect-ratio: 16 / 9;
-      background: var(--card-bg);
-      border: 2px solid var(--card-border);
-      border-radius: 18px;
-      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7);
+      max-width: 1100px;
+      margin: 0 auto;
       display: flex;
       flex-direction: column;
-      position: relative;
-      overflow: hidden;
+      gap: 24px;
     }
 
-    /* Top Bar */
-    .deck-header {
-      padding: 14px 28px;
-      background: rgba(11, 15, 25, 0.85);
-      border-bottom: 1px solid var(--card-border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .topic-pill {
-      background: rgba(56, 189, 248, 0.2);
-      color: var(--accent-cyan);
-      border: 1px solid rgba(56, 189, 248, 0.4);
-      padding: 4px 12px;
-      border-radius: 9999px;
-      font-size: 0.85rem;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-    }
-
-    .slide-counter {
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: var(--accent-cyan);
-      background: rgba(15, 23, 42, 0.8);
-      padding: 5px 14px;
-      border-radius: 8px;
+    /* Header */
+    header {
+      background: var(--card-bg);
       border: 1px solid var(--card-border);
-    }
-
-    .progress-bar {
-      height: 5px;
-      background: #1e293b;
-      width: 100%;
-    }
-
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
-      width: 20%;
-      transition: width 0.3s ease;
-    }
-
-    /* Slide Viewport - No vertical scrolling on projector */
-    .slide-viewport {
-      flex: 1;
+      border-radius: 16px;
       padding: 24px 32px;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      overflow: hidden;
+      gap: 16px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
     }
 
-    .slide-view {
-      display: none;
-      flex-direction: column;
-      height: 100%;
-      animation: fadeIn 0.25s ease-out forwards;
-      justify-content: space-between;
-    }
-
-    .slide-view.active {
-      display: flex;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Projector Sized Typography */
-    .slide-header {
+    .header-top {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 16px;
     }
 
-    .slide-headline {
-      font-size: 2rem;
+    .title-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .title-icon {
+      font-size: 2.2rem;
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      width: 54px;
+      height: 54px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    h1 {
+      font-size: 1.8rem;
       font-weight: 800;
       color: #ffffff;
-      display: flex;
-      align-items: center;
-      gap: 12px;
+      letter-spacing: -0.02em;
     }
 
-    /* Bilingual Badges */
-    .bilingual-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(15, 23, 42, 0.8);
-      border: 1px solid rgba(192, 132, 252, 0.4);
-      padding: 4px 12px;
-      border-radius: 8px;
+    .subtitle {
       font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-top: 2px;
     }
 
-    .bilingual-chip .en-term {
-      color: var(--accent-cyan);
-      font-weight: 700;
-    }
-
-    .bilingual-chip .lang-tag {
-      font-size: 0.8rem;
-      color: var(--accent-amber);
-    }
-
-    .bilingual-chip .rtl-term {
-      color: #f1f5f9;
-      font-weight: 600;
-    }
-
-    /* Code Cards Grid */
-    .grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      flex: 1;
-      align-items: stretch;
-    }
-
-    .grid-3 {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-      flex: 1;
-      align-items: stretch;
-    }
-
-    .code-card {
-      background: var(--code-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-
-    .card-top {
-      padding: 10px 16px;
-      background: rgba(255, 255, 255, 0.04);
-      border-bottom: 1px solid var(--card-border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .card-title {
-      font-size: 1.15rem;
-      font-weight: 700;
-      color: var(--accent-cyan);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .card-code {
-      padding: 14px 16px;
-      flex: 1;
-      font-family: Consolas, "Courier New", monospace;
-      font-size: 1.05rem;
-      line-height: 1.55;
-      color: #e2e8f0;
-      overflow-x: auto;
-    }
-
-    .card-code pre {
-      margin: 0;
-      white-space: pre;
-    }
-
-    .card-output {
-      padding: 8px 16px;
-      background: rgba(30, 41, 59, 0.6);
-      border-top: 1px solid #1e293b;
-      font-family: Consolas, monospace;
-      font-size: 0.92rem;
-      color: var(--accent-emerald);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    /* Key Idea / Takeaway Banner */
-    .key-idea-banner {
-      background: rgba(56, 189, 248, 0.1);
-      border-left: 5px solid var(--accent-cyan);
-      padding: 10px 18px;
-      border-radius: 0 10px 10px 0;
-      font-size: 1.05rem;
-      font-weight: 500;
-      color: #f1f5f9;
-      margin-top: 14px;
+    .header-actions {
       display: flex;
       align-items: center;
       gap: 12px;
+      flex-wrap: wrap;
     }
 
-    .key-idea-banner strong {
-      color: var(--accent-cyan);
-    }
-
-    /* Syntax Tokens */
-    .code-keyword { color: var(--keyword-color); font-weight: 700; }
-    .code-type { color: var(--type-color); font-weight: 700; }
-    .code-string { color: var(--string-color); }
-    .code-number { color: var(--number-color); font-weight: 600; }
-    .code-comment { color: var(--comment-color); font-style: italic; }
-    .code-method { color: #fbbf24; }
-
-    /* Interactive Quiz Card */
-    .quiz-container {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      flex: 1;
-    }
-
-    .quiz-card {
-      background: var(--code-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      padding: 16px 20px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .quiz-question {
-      font-size: 1.15rem;
-      font-weight: 700;
-      color: #ffffff;
-      margin-bottom: 10px;
-    }
-
-    .reveal-btn {
-      background: rgba(192, 132, 252, 0.2);
-      border: 1px solid var(--accent-purple);
+    /* Status & GitHub Source Badges */
+    .gh-source-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(192, 132, 252, 0.12);
+      border: 1px solid rgba(192, 132, 252, 0.3);
       color: var(--accent-purple);
-      padding: 10px 18px;
+      padding: 6px 12px;
       border-radius: 8px;
-      font-size: 1rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      font-family: Consolas, monospace;
+    }
+
+    .stats-badge {
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      color: var(--accent-cyan);
+      padding: 6px 14px;
+      border-radius: 9999px;
+      font-size: 0.85rem;
       font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .btn {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      padding: 9px 16px;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 600;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      transition: all 0.2s;
-      align-self: flex-start;
-      margin-top: 10px;
-    }
-
-    .reveal-btn:hover {
-      background: rgba(192, 132, 252, 0.35);
-      transform: translateY(-2px);
-    }
-
-    .answer-panel {
-      display: none;
-      background: rgba(34, 197, 94, 0.15);
-      border-left: 4px solid var(--accent-emerald);
-      padding: 10px 14px;
-      border-radius: 0 8px 8px 0;
-      font-size: 1.05rem;
-      color: #dcfce7;
-      margin-top: 10px;
-    }
-
-    .answer-panel.show {
-      display: block;
-    }
-
-    /* Footer */
-    .deck-footer {
-      padding: 14px 28px;
-      background: rgba(11, 15, 25, 0.9);
-      border-top: 1px solid var(--card-border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .key-badge {
-      background: #1e293b;
-      padding: 3px 8px;
-      border-radius: 4px;
-      font-family: monospace;
-      color: #94a3b8;
-      border: 1px solid #334155;
-      font-size: 0.85rem;
-    }
-
-    .nav-buttons {
-      display: flex;
-      gap: 12px;
-    }
-
-    .nav-btn {
-      background: #1e293b;
-      border: 1px solid var(--card-border);
-      color: #ffffff;
-      padding: 10px 22px;
-      border-radius: 8px;
-      font-size: 1rem;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      gap: 6px;
       transition: all 0.2s ease;
+      text-decoration: none;
     }
 
-    .nav-btn:hover:not(:disabled) {
-      background: #334155;
+    .btn:hover {
+      background: var(--card-hover);
       border-color: var(--accent-cyan);
       color: var(--accent-cyan);
     }
 
-    .nav-btn:disabled {
-      opacity: 0.35;
-      cursor: not-allowed;
-    }
-
-    .nav-btn.primary {
+    .btn-primary {
       background: var(--accent-cyan);
       color: #0b0f19;
       border-color: var(--accent-cyan);
     }
 
-    .nav-btn.primary:hover:not(:disabled) {
+    .btn-primary:hover {
       background: #7dd3fc;
+      color: #0b0f19;
+    }
+
+    /* Controls Bar */
+    .controls-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .search-wrapper {
+      flex: 1;
+      min-width: 260px;
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      background: #070a14;
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 12px 16px 12px 42px;
+      font-size: 0.95rem;
+      color: #ffffff;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .search-input:focus {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 1.1rem;
+    }
+
+    /* Presentations Grid */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+      gap: 20px;
+    }
+
+    .file-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 16px;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .file-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(56, 189, 248, 0.5);
+      background: var(--card-hover);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
+    }
+
+    .card-header-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .card-top-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .pill-badge {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: rgba(52, 211, 153, 0.15);
+      color: var(--accent-emerald);
+      border: 1px solid rgba(52, 211, 153, 0.3);
+    }
+
+    .file-name-tag {
+      font-family: Consolas, monospace;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      word-break: break-all;
+    }
+
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.35;
+    }
+
+    .card-description {
+      font-size: 0.9rem;
+      color: #cbd5e1;
+      line-height: 1.5;
+    }
+
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .tag-item {
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: #0d1424;
+      color: #94a3b8;
+      border: 1px solid #1e293b;
+    }
+
+    .card-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(51, 65, 85, 0.6);
+    }
+
+    .launch-link {
+      flex: 1;
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid var(--accent-cyan);
+      color: var(--accent-cyan);
+      padding: 9px 14px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .launch-link:hover {
+      background: var(--accent-cyan);
+      color: #0b0f19;
+    }
+
+    .preview-btn {
+      background: #0f172a;
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      padding: 9px 12px;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s;
+    }
+
+    .preview-btn:hover {
+      color: #ffffff;
+      border-color: #475569;
+    }
+
+    /* Modal */
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+
+    .modal-backdrop.show {
+      display: flex;
+    }
+
+    .modal-content {
+      background: var(--card-bg);
+      border: 2px solid var(--card-border);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 1200px;
+      height: 90vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
+    }
+
+    .modal-header {
+      padding: 14px 24px;
+      background: #0c111e;
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .modal-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .modal-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .modal-close-btn {
+      background: #1e293b;
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .modal-close-btn:hover {
+      background: var(--accent-rose);
+      color: #ffffff;
+      border-color: var(--accent-rose);
+    }
+
+    .modal-iframe {
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: #000000;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #1e293b;
+      border: 1px solid var(--accent-cyan);
+      color: #ffffff;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      display: none;
+      align-items: center;
+      gap: 10px;
+      z-index: 2000;
+      animation: fadeIn 0.2s ease-out;
+    }
+
+    .toast.show {
+      display: flex;
+    }
+
+    /* GitHub Config Drawer */
+    .config-drawer {
+      background: #0c111e;
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 16px 20px;
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .config-drawer.show {
+      display: flex;
+    }
+
+    .config-inputs-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .text-field {
+      flex: 1;
+      min-width: 220px;
+      background: #070a14;
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 0.9rem;
+      color: #ffffff;
+      outline: none;
+    }
+
+    .text-field:focus {
+      border-color: var(--accent-cyan);
+    }
+
+    .empty-state {
+      background: var(--card-bg);
+      border: 1px dashed var(--card-border);
+      border-radius: 16px;
+      padding: 48px 24px;
+      text-align: center;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .empty-state.show {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 640px) {
+      body { padding: 12px; }
+      .grid { grid-template-columns: 1fr; }
+      .controls-bar { flex-direction: column; align-items: stretch; }
     }
   </style>
 </head>
 <body>
 
-  <div class="deck-container">
+  <div class="container">
     <!-- Header -->
-    <header class="deck-header">
-      <span class="topic-pill">C# Computer Science &bull; 10th Grade</span>
-      <div class="slide-counter" id="slideCounter">Slide 1 of 5</div>
+    <header>
+      <div class="header-top">
+        <div class="title-group">
+          <div class="title-icon">🚀</div>
+          <div>
+            <h1>C# Course Presentations</h1>
+            <div class="subtitle">Interactive Slide Presentations for 10th Grade Computer Science &bull; GitHub Entry Portal</div>
+          </div>
+        </div>
+        <div class="header-actions">
+          <span class="gh-source-badge" id="ghSourceBadge">Source: Local / Manifest</span>
+          <span class="stats-badge" id="statsBadge">Loading...</span>
+          <button class="btn" id="refreshBtn" title="Rescan Repository or Directory">
+            <span>🔄</span> Rescan
+          </button>
+          <button class="btn" id="toggleConfigBtn" title="GitHub / File Settings">
+            <span>⚙️</span> Settings
+          </button>
+        </div>
+      </div>
+
+      <!-- Settings / Custom GitHub Repository Drawer -->
+      <div class="config-drawer" id="configDrawer">
+        <div style="font-size: 0.9rem; color: #cbd5e1;">
+          <strong>Dynamic GitHub Pages Auto-Discovery:</strong> When published to GitHub Pages, this page automatically reads your repository files via the GitHub API. You can also manually specify your repo:
+        </div>
+        <div class="config-inputs-row">
+          <input type="text" class="text-field" id="ghRepoInput" placeholder="username/repository (e.g. yourname/csharp-lessons)">
+          <button class="btn btn-primary" id="saveGhRepoBtn">Load from GitHub</button>
+          <button class="btn" id="addFileManualBtn">➕ Add File Name</button>
+          <button class="btn" id="closeConfigBtn">Close</button>
+        </div>
+      </div>
+
+      <!-- Search & Filters -->
+      <div class="controls-bar">
+        <div class="search-wrapper">
+          <span class="search-icon">🔍</span>
+          <input type="text" class="search-input" id="searchInput" placeholder="Search presentations by title, keyword, or filename...">
+        </div>
+      </div>
     </header>
 
-    <div class="progress-bar">
-      <div class="progress-fill" id="progressFill"></div>
-    </div>
+    <!-- Main Grid -->
+    <main>
+      <div class="grid" id="presentationsGrid">
+        <!-- Cards dynamically injected via JavaScript -->
+      </div>
 
-    <!-- Main Viewport -->
-    <main class="slide-viewport">
-
-      <!-- SLIDE 1: Introduction to Data Types -->
-      <section class="slide-view active" id="slide-0">
-        <div class="slide-header">
-          <h1 class="slide-headline"><span>📦</span> C# Data Types</h1>
-          <div class="bilingual-chip">
-            <span class="en-term">Data Type</span>
-            <span class="lang-tag">HE:</span> <bdi class="rtl-term" dir="rtl">טיפוס נתונים</bdi>
-            <span class="lang-tag">AR:</span> <bdi class="rtl-term" dir="rtl">نوع البيانات</bdi>
-          </div>
-        </div>
-
-        <div class="grid-2">
-          <!-- Code Blueprint 1 -->
-          <div class="code-card">
-            <div class="card-top">
-              <span class="card-title">Declaration Blueprint</span>
-            </div>
-            <div class="card-code">
-              <pre><span class="code-comment">// 1. Specify type  2. Name it  3. Assign value</span>
-<span class="code-type">DataType</span> variableName = value;
-
-<span class="code-comment">// Concrete Examples:</span>
-<span class="code-type">int</span>    playerScore = <span class="code-number">100</span>;
-<span class="code-type">double</span> runSpeed    = <span class="code-number">4.5</span>;
-<span class="code-type">string</span> heroName    = <span class="code-string">"Nova"</span>;</pre>
-            </div>
-            <div class="card-output">
-              <span>&gt; Statically Typed: Types never change after creation!</span>
-            </div>
-          </div>
-
-          <!-- Code Blueprint 2: Using & Combining Variables -->
-          <div class="code-card">
-            <div class="card-top">
-              <span class="card-title">Using Variables in Code</span>
-            </div>
-            <div class="card-code">
-              <pre><span class="code-comment">// Declare and display different types:</span>
-<span class="code-type">int</span>    score = <span class="code-number">100</span>;
-<span class="code-type">double</span> speed = <span class="code-number">4.5</span>;
-<span class="code-type">string</span> hero  = <span class="code-string">"Nova"</span>;
-
-<span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">$"Hero: {hero}"</span>);
-<span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">$"Score: {score}, Speed: {speed}"</span>);</pre>
-            </div>
-            <div class="card-output">
-              <span>&gt; Output: Hero: Nova | Score: 100, Speed: 4.5</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="key-idea-banner">
-          <span>💡</span>
-          <div><strong>Core Idea:</strong> Variables are typed data containers. C# is statically typed, meaning each variable has a fixed type that never changes.</div>
-        </div>
-      </section>
-
-      <!-- SLIDE 2: The Core Three (int, double, string) -->
-      <section class="slide-view" id="slide-1">
-        <div class="slide-header">
-          <h1 class="slide-headline"><span>🔢</span> The Core Three: int, double, string</h1>
-          <div style="display: flex; gap: 8px;">
-            <div class="bilingual-chip">
-              <span class="en-term">int</span>: <bdi class="rtl-term" dir="rtl">מספר שלם / عدد صحيح</bdi>
-            </div>
-          </div>
-        </div>
-
-        <div class="grid-3">
-          <!-- int -->
-          <div class="code-card">
-            <div class="card-top">
-              <span class="card-title">int (Integers)</span>
-            </div>
-            <div class="card-code">
-              <pre><span class="code-comment">// Whole numbers only</span>
-<span class="code-type">int</span> lives = <span class="code-number">3</span>;
-<span class="code-type">int</span> score = <span class="code-number">1250</span>;
-<span class="code-type">int</span> coins = -<span class="code-number">5</span>;
-
-score += <span class="code-number">250</span>;</pre>
-            </div>
-            <div class="card-output">
-              <span>&gt; No decimals allowed</span>
-            </div>
-          </div>
-
-          <!-- double -->
-          <div class="code-card">
-            <div class="card-top">
-              <span class="card-title">double (Decimals)</span>
-            </div>
-            <div class="card-code">
-              <pre><span class="code-comment">// Standard decimal numbers</span>
-<span class="code-type">double</span> velocity = <span class="code-number">9.81</span>;
-<span class="code-type">double</span> health   = <span class="code-number">75.5</span>;
-<span class="code-type">double</span> scale    = <span class="code-number">0.5</span>;
-
-health -= <span class="code-number">12.2</span>;</pre>
-            </div>
-            <div class="card-output">
-              <span>&gt; Default decimal type in C#</span>
-            </div>
-          </div>
-
-          <!-- string -->
-          <div class="code-card">
-            <div class="card-top">
-              <span class="card-title">string (Text)</span>
-            </div>
-            <div class="card-code">
-              <pre><span class="code-comment">// Double quotes for text</span>
-<span class="code-type">string</span> hero = <span class="code-string">"Shadow"</span>;
-<span class="code-type">string</span> rank = <span class="code-string">"Gold"</span>;
-
-<span class="code-comment">// Python "str" is "string" in C#</span>
-<span class="code-type">string</span> info = hero + <span class="code-string">" - "</span> + rank;</pre>
-            </div>
-            <div class="card-output">
-              <span>&gt; Output: "Shadow - Gold"</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="key-idea-banner">
-          <span>🧠</span>
-          <div><strong>Rule:</strong> Whole numbers use <code>int</code>, fractional decimals use <code>double</code>, and text uses <code>string</code>.</div>
-        </div>
-      </section>
-
-      <!-- SLIDE 3: Type Casting in Action -->
-      <section class="slide-view" id="slide-2">
-        <div class="slide-header">
-          <h1 class="slide-headline"><span>🔄</span> Type Casting in Action</h1>
-          <div class="bilingual-chip">
-            <span class="en-term">Casting</span>
-            <span class="lang-tag">HE:</span> <bdi class="rtl-term" dir="rtl">המרה</bdi>
-            <span class="lang-tag">AR:</span> <bdi class="rtl-term" dir="rtl">تحويل الأنواع</bdi>
-          </div>
-        </div>
-
-        <div class="grid-2">
-          <!-- Implicit vs Explicit -->
-          <div class="code-card">
-            <div class="card-top">
-              <span class="card-title">Implicit vs. Explicit Cast</span>
-            </div>
-            <div class="card-code">
-              <pre><span class="code-comment">// 1. Implicit (Safe: int ➔ double)</span>
-<span class="code-type">int</span> basePoints = <span class="code-number">40</span>;
-<span class="code-type">double</span> total   = basePoints; <span class="code-comment">// Automatic: 40.0</span>
-
-<span class="code-comment">// 2. Explicit (Truncation: double ➔ int)</span>
-<span class="code-type">double</span> exactHp = <span class="code-number">19.95</span>;
-<span class="code-type">int</span> roundedHp  = (<span class="code-type">int</span>)exactHp; <span class="code-comment">// Chops decimals!</span>
-
-<span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(roundedHp);</pre>
-            </div>
-            <div class="card-output">
-              <span>&gt; Output: 19 (Truncates! Does NOT round!)</span>
-            </div>
-          </div>
-
-          <!-- String Parsing -->
-          <div class="code-card">
-            <div class="card-top">
-              <span class="card-title">String Parsing (Input ➔ Numbers)</span>
-            </div>
-            <div class="card-code">
-              <pre><span class="code-comment">// Convert string text into numbers for math:</span>
-<span class="code-type">string</span> inputAge   = <span class="code-string">"16"</span>;
-<span class="code-type">string</span> inputPrice = <span class="code-string">"14.99"</span>;
-
-<span class="code-type">int</span> age      = <span class="code-type">int</span>.<span class="code-method">Parse</span>(inputAge);
-<span class="code-type">double</span> price = <span class="code-type">double</span>.<span class="code-method">Parse</span>(inputPrice);
-
-<span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(age + <span class="code-number">4</span>); <span class="code-comment">// Math works!</span></pre>
-            </div>
-            <div class="card-output">
-              <span>&gt; Output: 20</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="key-idea-banner">
-          <span>⚠️</span>
-          <div><strong>Takeaway:</strong> Implicit cast is automatic. Explicit <code>(int)</code> truncates fractions. Text requires <code>int.Parse()</code> or <code>double.Parse()</code>.</div>
-        </div>
-      </section>
-
-      <!-- SLIDE 4: When to Cast -->
-      <section class="slide-view" id="slide-3">
-        <div class="slide-header">
-          <h1 class="slide-headline"><span>🎯</span> When Should Casting Be Used?</h1>
-          <div class="bilingual-chip">
-            <span class="en-term">Syntax Fixes</span>: <bdi class="rtl-term" dir="rtl">מניעת שגיאות חישוב / تفادي أخطاء الحساب</bdi>
-          </div>
-        </div>
-
-        <div class="grid-2">
-          <!-- Problem 1: Integer Division Trap -->
-          <div class="code-card">
-            <div class="card-top">
-              <span class="card-title">Case 1: Fix Integer Division</span>
-            </div>
-            <div class="card-code">
-              <pre><span class="code-comment">// WRONG: int / int discards remainder</span>
-<span class="code-type">double</span> badRatio  = <span class="code-number">5</span> / <span class="code-number">2</span>;        <span class="code-comment">// Result: 2.0</span>
-
-<span class="code-comment">// FIXED: Cast one operand to double</span>
-<span class="code-type">double</span> goodRatio = (<span class="code-type">double</span>)<span class="code-number">5</span> / <span class="code-number">2</span>; <span class="code-comment">// Result: 2.5</span>
-
-<span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(goodRatio);</pre>
-            </div>
-            <div class="card-output">
-              <span>&gt; Output: 2.5</span>
-            </div>
-          </div>
-
-          <!-- Problem 2: Reading User Input -->
-          <div class="code-card">
-            <div class="card-top">
-              <span class="card-title">Case 2: Reading Console.ReadLine()</span>
-            </div>
-            <div class="card-code">
-              <pre><span class="code-comment">// Console input is ALWAYS a string:</span>
-<span class="code-type">Console</span>.<span class="code-method">Write</span>(<span class="code-string">"Enter level: "</span>);
-<span class="code-type">string</span> rawInput = <span class="code-type">Console</span>.<span class="code-method">ReadLine</span>();
-
-<span class="code-comment">// Cast/Parse to int before adding points:</span>
-<span class="code-type">int</span> nextLevel = <span class="code-type">int</span>.<span class="code-method">Parse</span>(rawInput) + <span class="code-number">1</span>;
-
-<span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">"Next: "</span> + nextLevel);</pre>
-            </div>
-            <div class="card-output">
-              <span>&gt; User inputs "4" ➔ Prints: Next: 5</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="key-idea-banner">
-          <span>📌</span>
-          <div><strong>When to cast:</strong> 1. Keyboard input math. 2. Preserving division decimals. 3. Dropping decimals for UI pixels.</div>
-        </div>
-      </section>
-
-      <!-- SLIDE 5: Comprehension Check -->
-      <section class="slide-view" id="slide-4">
-        <div class="slide-header">
-          <h1 class="slide-headline"><span>🧪</span> Comprehension Check: Predict the Output</h1>
-          <div class="bilingual-chip">
-            <span class="en-term">Quiz</span>: <bdi class="rtl-term" dir="rtl">שאלות הבנה / أسئلة الفهم</bdi>
-          </div>
-        </div>
-
-        <div class="quiz-container">
-          <!-- Quiz 1 -->
-          <div class="quiz-card">
-            <div class="quiz-question">Question 1: What prints to console?</div>
-            <div class="card-code" style="border-radius: 8px;">
-              <pre><span class="code-type">double</span> score = <span class="code-number">8.95</span>;
-<span class="code-type">int</span> result   = (<span class="code-type">int</span>)score;
-<span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(result);</pre>
-            </div>
-            <button class="reveal-btn" data-target="ans-1">
-              <span>👁️</span> Click to Reveal Answer
-            </button>
-            <div class="answer-panel" id="ans-1">
-              <strong>Answer: 8</strong> (Not 9!)<br>
-              <span style="font-size: 0.95rem; color: #cbd5e1;">Explicit cast <code>(int)</code> truncates the <code>.95</code> completely; it never rounds up.</span>
-            </div>
-          </div>
-
-          <!-- Quiz 2 -->
-          <div class="quiz-card">
-            <div class="quiz-question">Question 2: Text concatenation or math?</div>
-            <div class="card-code" style="border-radius: 8px;">
-              <pre><span class="code-type">string</span> a = <span class="code-string">"10"</span>;
-<span class="code-type">string</span> b = <span class="code-string">"20"</span>;
-<span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(a + b);</pre>
-            </div>
-            <button class="reveal-btn" data-target="ans-2">
-              <span>👁️</span> Click to Reveal Answer
-            </button>
-            <div class="answer-panel" id="ans-2">
-              <strong>Answer: "1020"</strong><br>
-              <span style="font-size: 0.95rem; color: #cbd5e1;">Because both are <code>string</code>, <code>+</code> joins text. To get 30, use <code>int.Parse(a) + int.Parse(b)</code>.</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="key-idea-banner">
-          <span>🚀</span>
-          <div><strong>Challenge:</strong> Predict the output of <code>(double)(7 / 2)</code> vs <code>(double)7 / 2</code> in your head!</div>
-        </div>
-      </section>
-
+      <!-- Empty State -->
+      <div class="empty-state" id="emptyState">
+        <div style="font-size: 2.5rem; color: var(--text-muted);">📂</div>
+        <h2 style="font-size: 1.2rem; color: #ffffff;">No presentations match your search</h2>
+        <p style="font-size: 0.9rem; color: var(--text-muted);">Try a different keyword or click "Rescan" to reload the repository list.</p>
+      </div>
     </main>
+  </div>
 
-    <!-- Footer Controls -->
-    <footer class="deck-footer">
-      <div>
-        <span class="key-badge">◀ Left Arrow</span>
-        <span class="key-badge">Right Arrow ▶</span>
-        <span class="key-badge">Space</span>
+  <!-- In-Page Preview Modal -->
+  <div class="modal-backdrop" id="previewModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title" id="modalTitle">
+          <span>🖥️</span> Preview Presentation
+        </div>
+        <div class="modal-actions">
+          <a class="btn" id="modalExternalLink" target="_blank" rel="noopener noreferrer">
+            <span>↗</span> Open in New Tab
+          </a>
+          <button class="modal-close-btn" id="modalCloseBtn" aria-label="Close preview">&times;</button>
+        </div>
       </div>
+      <iframe class="modal-iframe" id="modalIframe" src="about:blank"></iframe>
+    </div>
+  </div>
 
-      <div class="nav-buttons">
-        <button class="nav-btn" id="prevBtn" disabled>
-          <span>◀</span> Prev
-        </button>
-        <button class="nav-btn primary" id="nextBtn">
-          Next <span>▶</span>
-        </button>
-      </div>
-    </footer>
+  <!-- Toast Notification -->
+  <div class="toast" id="toastNotification">
+    <span id="toastMessage">Notification message</span>
   </div>
 
   <script>
     (function() {
-      const totalSlides = 5;
-      let currentSlide = 0;
+      // Default presentations in project
+      const DEFAULT_FILES = [
+        {
+          file: 'csharp_data_types_lesson.html',
+          title: 'C# Data Types & Type Casting',
+          description: 'Introduction to int, double, and string types, implicit and explicit casting, double.Parse(), and integer division traps.',
+          tags: ['5 Slides', 'Data Types', 'double & int', 'Bilingual HE/AR']
+        },
+        {
+          file: 'csharp_math_console_lesson.html',
+          title: 'Math Operations & Console I/O',
+          description: 'Core arithmetic operators (+, -, *, /, %), dedicated Console.Write/ReadLine breakdown, and 5 interactive code examples.',
+          tags: ['5 Slides', 'Arithmetic', 'Console I/O', 'Bilingual HE/AR']
+        }
+      ];
 
-      const slides = document.querySelectorAll('.slide-view');
-      const prevBtn = document.getElementById('prevBtn');
-      const nextBtn = document.getElementById('nextBtn');
-      const slideCounter = document.getElementById('slideCounter');
-      const progressFill = document.getElementById('progressFill');
+      // State
+      let filesList = [];
+      let searchQuery = '';
+      let detectedRepo = '';
 
-      function updateSlide(newIndex) {
-        if (newIndex < 0 || newIndex >= totalSlides) return;
+      // Elements
+      const grid = document.getElementById('presentationsGrid');
+      const emptyState = document.getElementById('emptyState');
+      const searchInput = document.getElementById('searchInput');
+      const statsBadge = document.getElementById('statsBadge');
+      const ghSourceBadge = document.getElementById('ghSourceBadge');
+      const refreshBtn = document.getElementById('refreshBtn');
+      const toggleConfigBtn = document.getElementById('toggleConfigBtn');
+      const configDrawer = document.getElementById('configDrawer');
+      const ghRepoInput = document.getElementById('ghRepoInput');
+      const saveGhRepoBtn = document.getElementById('saveGhRepoBtn');
+      const addFileManualBtn = document.getElementById('addFileManualBtn');
+      const closeConfigBtn = document.getElementById('closeConfigBtn');
 
-        slides[currentSlide].classList.remove('active');
-        currentSlide = newIndex;
-        slides[currentSlide].classList.add('active');
+      // Modal
+      const previewModal = document.getElementById('previewModal');
+      const modalCloseBtn = document.getElementById('modalCloseBtn');
+      const modalIframe = document.getElementById('modalIframe');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalExternalLink = document.getElementById('modalExternalLink');
 
-        slideCounter.textContent = 'Slide ' + (currentSlide + 1) + ' of ' + totalSlides;
-        const percent = ((currentSlide + 1) / totalSlides) * 100;
-        progressFill.style.width = percent + '%';
+      // Toast
+      const toast = document.getElementById('toastNotification');
+      const toastMessage = document.getElementById('toastMessage');
 
-        prevBtn.disabled = (currentSlide === 0);
-        if (currentSlide === totalSlides - 1) {
-          nextBtn.innerHTML = 'Restart <span>↺</span>';
+      function showToast(msg) {
+        toastMessage.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(function() {
+          toast.classList.remove('show');
+        }, 3200);
+      }
+
+      function formatTitle(filename) {
+        return filename
+          .replace(/\.html$/i, '')
+          .replace(/[_-]/g, ' ')
+          .replace(/\b\w/g, function(l) { return l.toUpperCase(); });
+      }
+
+      // Detect if running on GitHub Pages
+      function detectGitHubEnvironment() {
+        const host = window.location.hostname;
+        const pathParts = window.location.pathname.split('/').filter(Boolean);
+
+        if (host.endsWith('github.io') && pathParts.length > 0) {
+          const owner = host.split('.')[0];
+          const repo = pathParts[0];
+          return owner + '/' + repo;
+        }
+
+        try {
+          const savedRepo = localStorage.getItem('csharp_gh_repo');
+          if (savedRepo) return savedRepo;
+        } catch (e) {}
+
+        return '';
+      }
+
+      // Initialize initial files list
+      function initList() {
+        let stored = [];
+        try {
+          const raw = localStorage.getItem('csharp_files_manifest');
+          if (raw) stored = JSON.parse(raw);
+        } catch (e) {}
+
+        const map = new Map();
+        DEFAULT_FILES.forEach(function(item) { map.set(item.file, item); });
+        stored.forEach(function(item) { if (!map.has(item.file)) map.set(item.file, item); });
+
+        filesList = Array.from(map.values());
+      }
+
+      function persistList() {
+        try {
+          localStorage.setItem('csharp_files_manifest', JSON.stringify(filesList));
+        } catch (e) {}
+      }
+
+      // Query GitHub API dynamically for all .html files
+      async function fetchFromGitHub(repoString) {
+        if (!repoString) return false;
+        showToast('Connecting to GitHub API for ' + repoString + '...');
+
+        try {
+          const apiUrl = 'https://api.github.com/repos/' + repoString + '/contents/';
+          const res = await fetch(apiUrl);
+          if (res.ok) {
+            const data = await res.json();
+            if (Array.isArray(data)) {
+              let added = 0;
+              data.forEach(function(item) {
+                if (item.type === 'file' && item.name.endsWith('.html') && item.name.toLowerCase() !== 'index.html') {
+                  const existing = filesList.find(function(f) { return f.file === item.name; });
+                  if (!existing) {
+                    filesList.push({
+                      file: item.name,
+                      title: formatTitle(item.name),
+                      description: 'Presentation hosted on GitHub repository (' + repoString + ').',
+                      tags: ['GitHub Hosted', 'HTML Presentation']
+                    });
+                    added++;
+                  }
+                }
+              });
+
+              ghSourceBadge.textContent = 'GitHub: ' + repoString;
+              persistList();
+              renderGrid();
+              showToast('Synced from GitHub! Found ' + added + ' new file(s).');
+              return true;
+            }
+          }
+        } catch (err) {
+          // fallback to local
+        }
+        return false;
+      }
+
+      // Fallback local directory scan
+      async function scanLocalDirectory() {
+        showToast('Scanning directory for presentations...');
+        try {
+          const dirUrl = new URL('.', window.location.href).href; const res = await fetch(dirUrl, { cache: 'no-cache' });
+          if (res.ok) {
+            const text = await res.text();
+            const doc = new DOMParser().parseFromString(text, 'text/html');
+            const links = doc.querySelectorAll('a[href]');
+            let count = 0;
+
+            links.forEach(function(a) {
+              const href = a.getAttribute('href');
+              if (href && href.endsWith('.html') && !href.startsWith('http') && href !== 'index.html') {
+                const clean = href.split('?')[0].split('#')[0].replace(/^\.\//, '');
+                if (!filesList.some(function(f) { return f.file === clean; })) {
+                  filesList.push({
+                    file: clean,
+                    title: formatTitle(clean),
+                    description: 'Local HTML presentation in project directory.',
+                    tags: ['HTML Presentation', 'Auto-Detected']
+                  });
+                  count++;
+                }
+              }
+            });
+
+            if (count > 0) {
+              persistList();
+              showToast('Discovered ' + count + ' local HTML presentation(s).');
+            }
+          }
+        } catch (e) {}
+
+        renderGrid();
+      }
+
+      async function refreshAll() {
+        if (detectedRepo) {
+          const ok = await fetchFromGitHub(detectedRepo);
+          if (!ok) await scanLocalDirectory();
         } else {
-          nextBtn.innerHTML = 'Next <span>▶</span>';
+          await scanLocalDirectory();
         }
       }
 
-      prevBtn.addEventListener('click', function() {
-        updateSlide(currentSlide - 1);
-      });
+      // Render cards
+      function renderGrid() {
+        grid.innerHTML = '';
+        const q = searchQuery.trim().toLowerCase();
 
-      nextBtn.addEventListener('click', function() {
-        if (currentSlide < totalSlides - 1) {
-          updateSlide(currentSlide + 1);
+        const filtered = filesList.filter(function(item) {
+          if (!q) return true;
+          return item.title.toLowerCase().includes(q) ||
+                 item.file.toLowerCase().includes(q) ||
+                 (item.description || '').toLowerCase().includes(q) ||
+                 (item.tags || []).some(function(t) { return t.toLowerCase().includes(q); });
+        });
+
+        statsBadge.textContent = filtered.length + ' Presentation' + (filtered.length === 1 ? '' : 's');
+
+        if (filtered.length === 0) {
+          emptyState.classList.add('show');
+          return;
         } else {
-          updateSlide(0);
+          emptyState.classList.remove('show');
         }
+
+        filtered.forEach(function(item) {
+          const card = document.createElement('div');
+          card.className = 'file-card';
+
+          const topGroup = document.createElement('div');
+          topGroup.className = 'card-header-group';
+
+          const topMeta = document.createElement('div');
+          topMeta.className = 'card-top-meta';
+
+          const pill = document.createElement('span');
+          pill.className = 'pill-badge';
+          pill.textContent = 'Presentation';
+
+          const fileTag = document.createElement('span');
+          fileTag.className = 'file-name-tag';
+          fileTag.textContent = item.file;
+
+          topMeta.appendChild(pill);
+          topMeta.appendChild(fileTag);
+
+          const h2 = document.createElement('h2');
+          h2.className = 'card-title';
+          h2.textContent = item.title;
+
+          const desc = document.createElement('p');
+          desc.className = 'card-description';
+          desc.textContent = item.description || 'Interactive projector-friendly HTML presentation.';
+
+          const tagsDiv = document.createElement('div');
+          tagsDiv.className = 'card-tags';
+          (item.tags || []).forEach(function(t) {
+            const span = document.createElement('span');
+            span.className = 'tag-item';
+            span.textContent = t;
+            tagsDiv.appendChild(span);
+          });
+
+          topGroup.appendChild(topMeta);
+          topGroup.appendChild(h2);
+          topGroup.appendChild(desc);
+          topGroup.appendChild(tagsDiv);
+
+          const actionsDiv = document.createElement('div');
+          actionsDiv.className = 'card-actions';
+
+          const launchLink = document.createElement('a');
+          launchLink.className = 'launch-link';
+          launchLink.href = item.file;
+          launchLink.target = '_blank';
+          launchLink.rel = 'noopener noreferrer';
+          launchLink.innerHTML = '<span>🚀</span> Open Presentation';
+
+          const previewBtn = document.createElement('button');
+          previewBtn.className = 'preview-btn';
+          previewBtn.innerHTML = '<span>👁️</span> Preview';
+          previewBtn.addEventListener('click', function() {
+            openPreview(item);
+          });
+
+          actionsDiv.appendChild(launchLink);
+          actionsDiv.appendChild(previewBtn);
+
+          card.appendChild(topGroup);
+          card.appendChild(actionsDiv);
+          grid.appendChild(card);
+        });
+      }
+
+      function openPreview(item) {
+        modalTitle.innerHTML = '<span>🖥️</span> Preview: ' + item.title;
+        modalExternalLink.href = item.file;
+        modalIframe.src = item.file;
+        previewModal.classList.add('show');
+      }
+
+      function closePreview() {
+        previewModal.classList.remove('show');
+        modalIframe.src = 'about:blank';
+      }
+
+      modalCloseBtn.addEventListener('click', closePreview);
+      previewModal.addEventListener('click', function(e) {
+        if (e.target === previewModal) closePreview();
       });
 
       window.addEventListener('keydown', function(e) {
-        if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
-
-        if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
-          e.preventDefault();
-          if (currentSlide < totalSlides - 1) updateSlide(currentSlide + 1);
-        } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
-          e.preventDefault();
-          if (currentSlide > 0) updateSlide(currentSlide - 1);
-        } else if (e.key === 'Home') {
-          e.preventDefault();
-          updateSlide(0);
-        } else if (e.key === 'End') {
-          e.preventDefault();
-          updateSlide(totalSlides - 1);
+        if (e.key === 'Escape' && previewModal.classList.contains('show')) {
+          closePreview();
         }
       });
 
-      const revealBtns = document.querySelectorAll('.reveal-btn');
-      revealBtns.forEach(function(btn) {
-        btn.addEventListener('click', function() {
-          const targetId = this.getAttribute('data-target');
-          const panel = document.getElementById(targetId);
-          if (panel) {
-            const isShowing = panel.classList.contains('show');
-            if (isShowing) {
-              panel.classList.remove('show');
-              this.innerHTML = '<span>👁️</span> Click to Reveal Answer';
-            } else {
-              panel.classList.add('show');
-              this.innerHTML = '<span>🙈</span> Hide Answer';
-            }
-          }
-        });
+      searchInput.addEventListener('input', function(e) {
+        searchQuery = e.target.value;
+        renderGrid();
       });
+
+      refreshBtn.addEventListener('click', function() {
+        refreshAll();
+      });
+
+      toggleConfigBtn.addEventListener('click', function() {
+        const isShown = configDrawer.classList.contains('show');
+        if (isShown) {
+          configDrawer.classList.remove('show');
+        } else {
+          configDrawer.classList.add('show');
+          if (detectedRepo) ghRepoInput.value = detectedRepo;
+        }
+      });
+
+      closeConfigBtn.addEventListener('click', function() {
+        configDrawer.classList.remove('show');
+      });
+
+      saveGhRepoBtn.addEventListener('click', function() {
+        const val = ghRepoInput.value.trim().replace(/^https?:\/\/github\.com\//, '').replace(/\/$/, '');
+        if (!val) return;
+        detectedRepo = val;
+        try { localStorage.setItem('csharp_gh_repo', val); } catch (e) {}
+        fetchFromGitHub(val);
+        configDrawer.classList.remove('show');
+      });
+
+      addFileManualBtn.addEventListener('click', function() {
+        const val = ghRepoInput.value.trim();
+        if (!val) {
+          showToast('Type a file name in the box first!');
+          return;
+        }
+        let fileName = val;
+        if (!fileName.endsWith('.html')) fileName += '.html';
+
+        if (!filesList.some(function(f) { return f.file.toLowerCase() === fileName.toLowerCase(); })) {
+          filesList.unshift({
+            file: fileName,
+            title: formatTitle(fileName),
+            description: 'Custom added presentation file in this project.',
+            tags: ['Custom File', 'HTML Presentation']
+          });
+          persistList();
+          renderGrid();
+          ghRepoInput.value = '';
+          configDrawer.classList.remove('show');
+          showToast('Added ' + fileName + ' to entry portal!');
+        } else {
+          showToast('File is already listed!');
+        }
+      });
+
+      // Startup
+      initList();
+      detectedRepo = detectGitHubEnvironment();
+      if (detectedRepo) {
+        ghSourceBadge.textContent = 'GitHub: ' + detectedRepo;
+      }
+      renderGrid();
+      refreshAll();
+
     })();
   </script>
 </body>
