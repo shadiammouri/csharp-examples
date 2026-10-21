@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C# Math Operations &amp; Console I/O - 10th Grade Computer Science</title>
+  <style>
+    :root {
+      --bg-dark: #0a0e1a;
+      --card-bg: #121929;
+      --card-border: #26354f;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-cyan: #38bdf8;
+      --accent-purple: #c084fc;
+      --accent-emerald: #34d399;
+      --accent-amber: #fbbf24;
+      --accent-rose: #f43f5e;
+      --code-bg: #030712;
+      --keyword-color: #f472b6;
+      --type-color: #38bdf8;
+      --string-color: #a3e635;
+      --number-color: #fb923c;
+      --comment-color: #64748b;
+      --method-color: #fbbf24;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+      overflow-x: hidden;
+    }
+
+    /* 16:9 Projector Widescreen Container */
+    .deck-container {
+      width: 100%;
+      max-width: 1200px;
+      min-height: 680px;
+      aspect-ratio: 16 / 9;
+      background: var(--card-bg);
+      border: 2px solid var(--card-border);
+      border-radius: 18px;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Top Navigation Header */
+    .deck-header {
+      padding: 14px 28px;
+      background: rgba(10, 14, 26, 0.88);
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .topic-pill {
+      background: rgba(56, 189, 248, 0.2);
+      color: var(--accent-cyan);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      padding: 4px 12px;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .slide-counter {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      background: rgba(15, 23, 42, 0.8);
+      padding: 5px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--card-border);
+    }
+
+    .progress-bar {
+      height: 5px;
+      background: #1e293b;
+      width: 100%;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+      width: 20%;
+      transition: width 0.3s ease;
+    }
+
+    /* Slide Viewport */
+    .slide-viewport {
+      flex: 1;
+      padding: 24px 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+
+    .slide-view {
+      display: none;
+      flex-direction: column;
+      height: 100%;
+      animation: fadeIn 0.25s ease-out forwards;
+      justify-content: space-between;
+    }
+
+    .slide-view.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Slide Titles & Badges */
+    .slide-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .slide-headline {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .bilingual-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(192, 132, 252, 0.4);
+      padding: 4px 12px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+    }
+
+    .bilingual-chip .en-term {
+      color: var(--accent-cyan);
+      font-weight: 700;
+    }
+
+    .bilingual-chip .lang-tag {
+      font-size: 0.8rem;
+      color: var(--accent-amber);
+    }
+
+    .bilingual-chip .rtl-term {
+      color: #f1f5f9;
+      font-weight: 600;
+    }
+
+    /* Code Card Grids */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      flex: 1;
+      align-items: stretch;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      flex: 1;
+      align-items: stretch;
+    }
+
+    .code-card {
+      background: var(--code-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .card-top {
+      padding: 10px 16px;
+      background: rgba(255, 255, 255, 0.04);
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .card-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-code {
+      padding: 14px 16px;
+      flex: 1;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 1.05rem;
+      line-height: 1.55;
+      color: #e2e8f0;
+      overflow-x: auto;
+    }
+
+    .card-code pre {
+      margin: 0;
+      white-space: pre;
+    }
+
+    .card-output {
+      padding: 8px 16px;
+      background: rgba(30, 41, 59, 0.65);
+      border-top: 1px solid #1e293b;
+      font-family: Consolas, monospace;
+      font-size: 0.95rem;
+      color: var(--accent-emerald);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Key Idea / Takeaway Banner */
+    .key-idea-banner {
+      background: rgba(56, 189, 248, 0.1);
+      border-left: 5px solid var(--accent-cyan);
+      padding: 10px 18px;
+      border-radius: 0 10px 10px 0;
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: #f1f5f9;
+      margin-top: 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .key-idea-banner strong {
+      color: var(--accent-cyan);
+    }
+
+    /* Syntax Tokens */
+    .code-keyword { color: var(--keyword-color); font-weight: 700; }
+    .code-type { color: var(--type-color); font-weight: 700; }
+    .code-string { color: var(--string-color); }
+    .code-number { color: var(--number-color); font-weight: 600; }
+    .code-comment { color: var(--comment-color); font-style: italic; }
+    .code-method { color: var(--method-color); }
+
+    /* Interactive Quiz */
+    .quiz-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      flex: 1;
+    }
+
+    .quiz-card {
+      background: var(--code-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 16px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .quiz-question {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 10px;
+    }
+
+    .reveal-btn {
+      background: rgba(192, 132, 252, 0.2);
+      border: 1px solid var(--accent-purple);
+      color: var(--accent-purple);
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+      align-self: flex-start;
+      margin-top: 10px;
+    }
+
+    .reveal-btn:hover {
+      background: rgba(192, 132, 252, 0.35);
+      transform: translateY(-2px);
+    }
+
+    .answer-panel {
+      display: none;
+      background: rgba(34, 197, 94, 0.15);
+      border-left: 4px solid var(--accent-emerald);
+      padding: 10px 14px;
+      border-radius: 0 8px 8px 0;
+      font-size: 1.05rem;
+      color: #dcfce7;
+      margin-top: 10px;
+    }
+
+    .answer-panel.show {
+      display: block;
+    }
+
+    /* Footer Controls */
+    .deck-footer {
+      padding: 14px 28px;
+      background: rgba(10, 14, 26, 0.9);
+      border-top: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .key-badge {
+      background: #1e293b;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-family: monospace;
+      color: #94a3b8;
+      border: 1px solid #334155;
+      font-size: 0.85rem;
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: 12px;
+    }
+
+    .nav-btn {
+      background: #1e293b;
+      border: 1px solid var(--card-border);
+      color: #ffffff;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .nav-btn:hover:not(:disabled) {
+      background: #334155;
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    .nav-btn.primary {
+      background: var(--accent-cyan);
+      color: #0b0f19;
+      border-color: var(--accent-cyan);
+    }
+
+    .nav-btn.primary:hover:not(:disabled) {
+      background: #7dd3fc;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="deck-container">
+    <!-- Header -->
+    <header class="deck-header">
+      <span class="topic-pill">C# Programming &bull; 10th Grade Math &amp; I/O</span>
+      <div class="slide-counter" id="slideCounter">Slide 1 of 5</div>
+    </header>
+
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <!-- Main Viewport -->
+    <main class="slide-viewport">
+
+      <!-- SLIDE 1: Introduction & The 5 Math Operators -->
+      <section class="slide-view active" id="slide-0">
+        <div class="slide-header">
+          <h1 class="slide-headline"><span>⚡</span> Math Operations in C#</h1>
+          <div class="bilingual-chip">
+            <span class="en-term">Math Operation</span>
+            <span class="lang-tag">HE:</span> <bdi class="rtl-term" dir="rtl">פעולה חשבונית</bdi>
+            <span class="lang-tag">AR:</span> <bdi class="rtl-term" dir="rtl">عملية حسابية</bdi>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <!-- Left: The Five Basic Operators -->
+          <div class="code-card">
+            <div class="card-top">
+              <span class="card-title">Arithmetic Operators</span>
+            </div>
+            <div class="card-code">
+              <pre><span class="code-comment">// The 5 Core Math Operators:</span>
+<span class="code-number">+</span>  <span class="code-comment">// Addition        (חיבור / جمع)</span>
+<span class="code-number">-</span>  <span class="code-comment">// Subtraction     (חיסור / طرح)</span>
+<span class="code-number">*</span>  <span class="code-comment">// Multiplication  (כפל / ضرب)</span>
+<span class="code-number">/</span>  <span class="code-comment">// Division        (חילוק / قسمة)</span>
+<span class="code-number">%</span>  <span class="code-comment">// Modulo          (שארית / باقي القسمة)</span></pre>
+            </div>
+            <div class="card-output">
+              <span>&gt; Work on int, float, and double numbers</span>
+            </div>
+          </div>
+
+          <!-- Right: Two Variables Blueprint -->
+          <div class="code-card">
+            <div class="card-top">
+              <span class="card-title">Two Variables Blueprint</span>
+            </div>
+            <div class="card-code">
+              <pre><span class="code-comment">// Pattern: Type var1, var2, result</span>
+<span class="code-type">int</span> a = <span class="code-number">10</span>;
+<span class="code-type">int</span> b = <span class="code-number">3</span>;
+
+<span class="code-type">int</span> sum    = a + b;  <span class="code-comment">// 13</span>
+<span class="code-type">int</span> diff   = a - b;  <span class="code-comment">// 7</span>
+<span class="code-type">int</span> prod   = a * b;  <span class="code-comment">// 30</span>
+<span class="code-type">int</span> quot   = a / b;  <span class="code-comment">// 3 (integer division)</span>
+<span class="code-type">int</span> remain = a % b;  <span class="code-comment">// 1 (remainder)</span></pre>
+            </div>
+            <div class="card-output">
+              <span>&gt; Output: 13, 7, 30, 3, 1</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="key-idea-banner">
+          <span>💡</span>
+          <div><strong>Core Idea:</strong> C# calculates right-hand math first, then stores the answer into the left-hand variable.</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 2: Dedicated Slide for Console Read & Write -->
+      <section class="slide-view" id="slide-1">
+        <div class="slide-header">
+          <h1 class="slide-headline"><span>🖥️</span> Console I/O: Read &amp; Write</h1>
+          <div class="bilingual-chip">
+            <span class="en-term">Console I/O</span>
+            <span class="lang-tag">HE:</span> <bdi class="rtl-term" dir="rtl">קלט ופלט</bdi>
+            <span class="lang-tag">AR:</span> <bdi class="rtl-term" dir="rtl">إدخال وإخراج</bdi>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <!-- Console.Write vs WriteLine -->
+          <div class="code-card">
+            <div class="card-top">
+              <span class="card-title">Console Output: Write vs. WriteLine</span>
+            </div>
+            <div class="card-code">
+              <pre><span class="code-comment">// Console.Write: stays on SAME line (great for prompts)</span>
+<span class="code-type">Console</span>.<span class="code-method">Write</span>(<span class="code-string">"Enter number: "</span>);
+
+<span class="code-comment">// Console.WriteLine: prints text &amp; moves to NEXT line</span>
+<span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">"Result ready!"</span>);
+
+<span class="code-comment">// Clean string interpolation ($"...")</span>
+<span class="code-type">int</span> total = <span class="code-number">50</span>;
+<span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">$"Total is: {total}"</span>);</pre>
+            </div>
+            <div class="card-output">
+              <span>&gt; HE: פלט לקונסול | AR: طباعة للشاشة</span>
+            </div>
+          </div>
+
+          <!-- Console.ReadLine & Parsing -->
+          <div class="code-card">
+            <div class="card-top">
+              <span class="card-title">Console Input: ReadLine &amp; Parse</span>
+            </div>
+            <div class="card-code">
+              <pre><span class="code-comment">// 1. Read input (always returns string text!)</span>
+<span class="code-type">Console</span>.<span class="code-method">Write</span>(<span class="code-string">"Enter first number: "</span>);
+<span class="code-type">string</span> rawInput = <span class="code-type">Console</span>.<span class="code-method">ReadLine</span>();
+
+<span class="code-comment">// 2. Parse text into an int or double for math</span>
+<span class="code-type">int</span> num = <span class="code-type">int</span>.<span class="code-method">Parse</span>(rawInput);
+
+<span class="code-comment">// One-line shorthand:</span>
+<span class="code-type">int</span> num2 = <span class="code-type">int</span>.<span class="code-method">Parse</span>(<span class="code-type">Console</span>.<span class="code-method">ReadLine</span>());</pre>
+            </div>
+            <div class="card-output">
+              <span>&gt; HE: קלט מהמשתמש | AR: قراءة مدخلات المستخدم</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="key-idea-banner">
+          <span>⚠️</span>
+          <div><strong>Golden Rule:</strong> <code>Console.ReadLine()</code> captures text. You <em>must</em> use <code>int.Parse()</code> or <code>double.Parse()</code> before doing math!</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 3: Statically Set Math Programs (Examples 1, 2, 3) -->
+      <section class="slide-view" id="slide-2">
+        <div class="slide-header">
+          <h1 class="slide-headline"><span>⚙️</span> Statically Set Variables</h1>
+          <div class="bilingual-chip">
+            <span class="en-term">Static Variables</span>
+            <span class="lang-tag">HE:</span> <bdi class="rtl-term" dir="rtl">משתנים סטטיים (קבועים בקוד)</bdi>
+            <span class="lang-tag">AR:</span> <bdi class="rtl-term" dir="rtl">متغيرات ثابتة في الكود</bdi>
+          </div>
+        </div>
+
+        <div class="grid-3">
+          <!-- Example 1: Addition & Subtraction -->
+          <div class="code-card">
+            <div class="card-top">
+              <span class="card-title">Ex 1: Score &amp; Penalty (+ / -)</span>
+            </div>
+            <div class="card-code">
+              <pre><span class="code-comment">// Two local int variables</span>
+<span class="code-type">int</span> currentScore = <span class="code-number">120</span>;
+<span class="code-type">int</span> bonusPoints  = <span class="code-number">45</span>;
+
+<span class="code-type">int</span> finalScore = currentScore + bonusPoints;
+
+<span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">$"Score: {finalScore}"</span>);</pre>
+            </div>
+            <div class="card-output">
+              <span>&gt; Output: Score: 165</span>
+            </div>
+          </div>
+
+          <!-- Example 2: Multiplication -->
+          <div class="code-card">
+            <div class="card-top">
+              <span class="card-title">Ex 2: Area Calculation (*)</span>
+            </div>
+            <div class="card-code">
+              <pre><span class="code-comment">// Rectangle area: width * height</span>
+<span class="code-type">int</span> width  = <span class="code-number">15</span>;
+<span class="code-type">int</span> height = <span class="code-number">8</span>;
+
+<span class="code-type">int</span> area = width * height;
+
+<span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">$"Area: {area} sq units"</span>);</pre>
+            </div>
+            <div class="card-output">
+              <span>&gt; Output: Area: 120 sq units</span>
+            </div>
+          </div>
+
+          <!-- Example 3: Modulo / Remainder -->
+          <div class="code-card">
+            <div class="card-top">
+              <span class="card-title">Ex 3: Modulo Remainder (%)</span>
+            </div>
+            <div class="card-code">
+              <pre><span class="code-comment">// Sharing items equally</span>
+<span class="code-type">int</span> totalCandies = <span class="code-number">23</span>;
+<span class="code-type">int</span> students     = <span class="code-number">5</span>;
+
+<span class="code-type">int</span> leftover = totalCandies % students;
+
+<span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">$"Leftover: {leftover}"</span>);</pre>
+            </div>
+            <div class="card-output">
+              <span>&gt; Output: Leftover: 3</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="key-idea-banner">
+          <span>🧠</span>
+          <div><strong>Takeaway:</strong> Modulo <code>%</code> gives the remainder after division. <code>23 % 5 = 3</code> because 5 goes into 23 four times with 3 remaining!</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 4: Interactive User Input Math Programs (Examples 4 & 5) -->
+      <section class="slide-view" id="slide-3">
+        <div class="slide-header">
+          <h1 class="slide-headline"><span>🎮</span> User Input Programs</h1>
+          <div class="bilingual-chip">
+            <span class="en-term">User Input</span>
+            <span class="lang-tag">HE:</span> <bdi class="rtl-term" dir="rtl">קליטה מהמשתמש</bdi>
+            <span class="lang-tag">AR:</span> <bdi class="rtl-term" dir="rtl">إدخال تفاعلي</bdi>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <!-- Example 4: User Driven Speed Calculator (Division) -->
+          <div class="code-card">
+            <div class="card-top">
+              <span class="card-title">Ex 4: Speed Calculator (Division /)</span>
+            </div>
+            <div class="card-code">
+              <pre><span class="code-type">Console</span>.<span class="code-method">Write</span>(<span class="code-string">"Enter distance (km): "</span>);
+<span class="code-type">double</span> distance = <span class="code-type">double</span>.<span class="code-method">Parse</span>(<span class="code-type">Console</span>.<span class="code-method">ReadLine</span>());
+
+<span class="code-type">Console</span>.<span class="code-method">Write</span>(<span class="code-string">"Enter hours: "</span>);
+<span class="code-type">double</span> hours = <span class="code-type">double</span>.<span class="code-method">Parse</span>(<span class="code-type">Console</span>.<span class="code-method">ReadLine</span>());
+
+<span class="code-type">double</span> speed = distance / hours;
+
+<span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">$"Average Speed: {speed} km/h"</span>);</pre>
+            </div>
+            <div class="card-output">
+              <span>&gt; Input: 150, 2 ➔ Output: Average Speed: 75 km/h</span>
+            </div>
+          </div>
+
+          <!-- Example 5: User Driven Discount Calculator (Multiplication & Subtraction) -->
+          <div class="code-card">
+            <div class="card-top">
+              <span class="card-title">Ex 5: Shopping Discount Calculator (*, -)</span>
+            </div>
+            <div class="card-code">
+              <pre><span class="code-type">Console</span>.<span class="code-method">Write</span>(<span class="code-string">"Enter price: "</span>);
+<span class="code-type">double</span> price = <span class="code-type">double</span>.<span class="code-method">Parse</span>(<span class="code-type">Console</span>.<span class="code-method">ReadLine</span>());
+
+<span class="code-type">Console</span>.<span class="code-method">Write</span>(<span class="code-string">"Enter discount % (e.g. 20): "</span>);
+<span class="code-type">double</span> discountPercent = <span class="code-type">double</span>.<span class="code-method">Parse</span>(<span class="code-type">Console</span>.<span class="code-method">ReadLine</span>());
+
+<span class="code-type">double</span> savings = price * (discountPercent / <span class="code-number">100.0</span>);
+<span class="code-type">double</span> finalCost = price - savings;
+
+<span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">$"Final Cost: ${finalCost}"</span>);</pre>
+            </div>
+            <div class="card-output">
+              <span>&gt; Input: 100, 20 ➔ Output: Final Cost: $80</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="key-idea-banner">
+          <span>🎯</span>
+          <div><strong>Pattern:</strong> 1. Prompt user with <code>Console.Write</code>. 2. Parse input into variables. 3. Perform math. 4. Display result!</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 5: Comprehension Check Quiz -->
+      <section class="slide-view" id="slide-4">
+        <div class="slide-header">
+          <h1 class="slide-headline"><span>🧪</span> Comprehension Check: Predict the Math</h1>
+          <div class="bilingual-chip">
+            <span class="en-term">Class Quiz</span>
+            <span class="lang-tag">HE:</span> <bdi class="rtl-term" dir="rtl">שאלות הבנה</bdi>
+            <span class="lang-tag">AR:</span> <bdi class="rtl-term" dir="rtl">أسئلة الفهم</bdi>
+          </div>
+        </div>
+
+        <div class="quiz-container">
+          <!-- Quiz 1: Modulo vs Division -->
+          <div class="quiz-card">
+            <div class="quiz-question">Question 1: Integer Division &amp; Modulo</div>
+            <div class="card-code" style="border-radius: 8px;">
+              <pre><span class="code-type">int</span> x = <span class="code-number">19</span>;
+<span class="code-type">int</span> y = <span class="code-number">4</span>;
+
+<span class="code-type">int</span> divResult = x / y;
+<span class="code-type">int</span> modResult = x % y;
+
+<span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">$"Div: {divResult}, Mod: {modResult}"</span>);</pre>
+            </div>
+            <button class="reveal-btn" data-target="ans-1">
+              <span>👁️</span> Click to Reveal Answer
+            </button>
+            <div class="answer-panel" id="ans-1">
+              <strong>Answer: Div: 4, Mod: 3</strong><br>
+              <span style="font-size: 0.95rem; color: #cbd5e1;"><code>19 / 4 = 4</code> (decimal truncated). <code>19 % 4 = 3</code> (remainder because 4 * 4 = 16, and 19 - 16 = 3).</span>
+            </div>
+          </div>
+
+          <!-- Quiz 2: The String Input Addition Trap -->
+          <div class="quiz-card">
+            <div class="quiz-question">Question 2: Input Without Parsing Trap</div>
+            <div class="card-code" style="border-radius: 8px;">
+              <pre><span class="code-comment">// User inputs "5" and then "3"</span>
+<span class="code-type">string</span> a = <span class="code-string">"5"</span>;
+<span class="code-type">string</span> b = <span class="code-string">"3"</span>;
+
+<span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(a + b);</pre>
+            </div>
+            <button class="reveal-btn" data-target="ans-2">
+              <span>👁️</span> Click to Reveal Answer
+            </button>
+            <div class="answer-panel" id="ans-2">
+              <strong>Answer: "53" (Text Concatenation!)</strong><br>
+              <span style="font-size: 0.95rem; color: #cbd5e1;">Without <code>int.Parse()</code>, the <code>+</code> operator glues text together instead of adding. To get <code>8</code>, write <code>int.Parse(a) + int.Parse(b)</code>.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="key-idea-banner">
+          <span>🚀</span>
+          <div><strong>Coding Challenge:</strong> Write a program that asks the user for two numbers and prints whether the first number is evenly divisible by the second using <code>%</code>!</div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer Controls -->
+    <footer class="deck-footer">
+      <div>
+        <span class="key-badge">◀ Left Arrow</span>
+        <span class="key-badge">Right Arrow ▶</span>
+        <span class="key-badge">Space</span>
+      </div>
+
+      <div class="nav-buttons">
+        <button class="nav-btn" id="prevBtn" disabled>
+          <span>◀</span> Prev
+        </button>
+        <button class="nav-btn primary" id="nextBtn">
+          Next <span>▶</span>
+        </button>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    (function() {
+      const totalSlides = 5;
+      let currentSlide = 0;
+
+      const slides = document.querySelectorAll('.slide-view');
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      const slideCounter = document.getElementById('slideCounter');
+      const progressFill = document.getElementById('progressFill');
+
+      function updateSlide(newIndex) {
+        if (newIndex < 0 || newIndex >= totalSlides) return;
+
+        slides[currentSlide].classList.remove('active');
+        currentSlide = newIndex;
+        slides[currentSlide].classList.add('active');
+
+        slideCounter.textContent = 'Slide ' + (currentSlide + 1) + ' of ' + totalSlides;
+        const percent = ((currentSlide + 1) / totalSlides) * 100;
+        progressFill.style.width = percent + '%';
+
+        prevBtn.disabled = (currentSlide === 0);
+        if (currentSlide === totalSlides - 1) {
+          nextBtn.innerHTML = 'Restart <span>↺</span>';
+        } else {
+          nextBtn.innerHTML = 'Next <span>▶</span>';
+        }
+      }
+
+      prevBtn.addEventListener('click', function() {
+        updateSlide(currentSlide - 1);
+      });
+
+      nextBtn.addEventListener('click', function() {
+        if (currentSlide < totalSlides - 1) {
+          updateSlide(currentSlide + 1);
+        } else {
+          updateSlide(0);
+        }
+      });
+
+      window.addEventListener('keydown', function(e) {
+        if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
+
+        if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+          e.preventDefault();
+          if (currentSlide < totalSlides - 1) updateSlide(currentSlide + 1);
+        } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+          e.preventDefault();
+          if (currentSlide > 0) updateSlide(currentSlide - 1);
+        } else if (e.key === 'Home') {
+          e.preventDefault();
+          updateSlide(0);
+        } else if (e.key === 'End') {
+          e.preventDefault();
+          updateSlide(totalSlides - 1);
+        }
+      });
+
+      const revealBtns = document.querySelectorAll('.reveal-btn');
+      revealBtns.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          const targetId = this.getAttribute('data-target');
+          const panel = document.getElementById(targetId);
+          if (panel) {
+            const isShowing = panel.classList.contains('show');
+            if (isShowing) {
+              panel.classList.remove('show');
+              this.innerHTML = '<span>👁️</span> Click to Reveal Answer';
+            } else {
+              panel.classList.add('show');
+              this.innerHTML = '<span>🙈</span> Hide Answer';
+            }
+          }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
