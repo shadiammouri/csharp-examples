@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C# For Loops - 10th Grade Computer Science</title>
+  <style>
+    :root {
+      --bg-dark: #0a0e1a;
+      --card-bg: #121929;
+      --card-border: #26354f;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-cyan: #38bdf8;
+      --accent-purple: #c084fc;
+      --accent-emerald: #34d399;
+      --accent-amber: #fbbf24;
+      --accent-rose: #f43f5e;
+      --code-bg: #030712;
+      --keyword-color: #f472b6;
+      --type-color: #38bdf8;
+      --string-color: #a3e635;
+      --number-color: #fb923c;
+      --comment-color: #64748b;
+      --method-color: #fbbf24;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+      overflow-x: hidden;
+    }
+
+    /* 16:9 Projector Widescreen Container */
+    .presentation-container {
+      width: 100%;
+      max-width: 1200px;
+      min-height: 680px;
+      aspect-ratio: 16 / 9;
+      background: var(--card-bg);
+      border: 2px solid var(--card-border);
+      border-radius: 18px;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Top Navigation Header */
+    .presentation-header {
+      padding: 14px 28px;
+      background: rgba(10, 14, 26, 0.88);
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .topic-pill {
+      background: rgba(56, 189, 248, 0.2);
+      color: var(--accent-cyan);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      padding: 4px 12px;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .slide-counter {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      background: rgba(15, 23, 42, 0.8);
+      padding: 5px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--card-border);
+    }
+
+    .progress-bar {
+      height: 5px;
+      background: #1e293b;
+      width: 100%;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+      width: 10%;
+      transition: width 0.3s ease;
+    }
+
+    /* Slide Viewport */
+    .slide-viewport {
+      flex: 1;
+      padding: 24px 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+
+    .slide-view {
+      display: none;
+      flex-direction: column;
+      height: 100%;
+      animation: fadeIn 0.25s ease-out forwards;
+      justify-content: space-between;
+    }
+
+    .slide-view.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Slide Titles & Badges */
+    .slide-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .slide-headline {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .bilingual-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(192, 132, 252, 0.4);
+      padding: 4px 12px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+    }
+
+    .bilingual-chip .en-term {
+      color: var(--accent-cyan);
+      font-weight: 700;
+    }
+
+    .bilingual-chip .lang-tag {
+      font-size: 0.8rem;
+      color: var(--accent-amber);
+    }
+
+    .bilingual-chip .rtl-term {
+      color: #f1f5f9;
+      font-weight: 600;
+    }
+
+    .difficulty-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(251, 191, 36, 0.15);
+      border: 1px solid rgba(251, 191, 36, 0.4);
+      color: var(--accent-amber);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Code Card Grids */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      flex: 1;
+      align-items: stretch;
+    }
+
+    .code-card {
+      background: var(--code-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .code-card.full-width {
+      width: 100%;
+      flex: 1;
+    }
+
+    .card-top {
+      padding: 10px 16px;
+      background: rgba(255, 255, 255, 0.04);
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .card-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-code {
+      padding: 14px 18px;
+      flex: 1;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 1.08rem;
+      line-height: 1.55;
+      color: #e2e8f0;
+      overflow-x: auto;
+    }
+
+    .card-code pre {
+      margin: 0;
+      white-space: pre;
+    }
+
+    .card-output {
+      padding: 10px 18px;
+      background: rgba(30, 41, 59, 0.65);
+      border-top: 1px solid #1e293b;
+      font-family: Consolas, monospace;
+      font-size: 0.96rem;
+      color: var(--accent-emerald);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Key Idea / Takeaway Banner */
+    .key-idea-banner {
+      background: rgba(56, 189, 248, 0.1);
+      border-left: 5px solid var(--accent-cyan);
+      padding: 10px 18px;
+      border-radius: 0 10px 10px 0;
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: #f1f5f9;
+      margin-top: 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .key-idea-banner strong {
+      color: var(--accent-cyan);
+    }
+
+    /* Syntax Tokens */
+    .code-keyword { color: var(--keyword-color); font-weight: 700; }
+    .code-type { color: var(--type-color); font-weight: 700; }
+    .code-string { color: var(--string-color); }
+    .code-number { color: var(--number-color); font-weight: 600; }
+    .code-comment { color: var(--comment-color); font-style: italic; }
+    .code-method { color: var(--method-color); }
+
+    /* Interactive Quiz */
+    .quiz-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      flex: 1;
+    }
+
+    .quiz-card {
+      background: var(--code-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 16px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .quiz-question {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 10px;
+    }
+
+    .reveal-btn {
+      background: rgba(192, 132, 252, 0.2);
+      border: 1px solid var(--accent-purple);
+      color: var(--accent-purple);
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+      align-self: flex-start;
+      margin-top: 10px;
+    }
+
+    .reveal-btn:hover {
+      background: rgba(192, 132, 252, 0.35);
+      transform: translateY(-2px);
+    }
+
+    .answer-panel {
+      display: none;
+      background: rgba(34, 197, 94, 0.15);
+      border-left: 4px solid var(--accent-emerald);
+      padding: 10px 14px;
+      border-radius: 0 8px 8px 0;
+      font-size: 1.05rem;
+      color: #dcfce7;
+      margin-top: 10px;
+    }
+
+    .answer-panel.show {
+      display: block;
+    }
+
+    /* Footer Controls */
+    .presentation-footer {
+      padding: 14px 28px;
+      background: rgba(10, 14, 26, 0.9);
+      border-top: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .key-badge {
+      background: #1e293b;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-family: monospace;
+      color: #94a3b8;
+      border: 1px solid #334155;
+      font-size: 0.85rem;
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: 12px;
+    }
+
+    .nav-btn {
+      background: #1e293b;
+      border: 1px solid var(--card-border);
+      color: #ffffff;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .nav-btn:hover:not(:disabled) {
+      background: #334155;
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    .nav-btn.primary {
+      background: var(--accent-cyan);
+      color: #0b0f19;
+      border-color: var(--accent-cyan);
+    }
+
+    .nav-btn.primary:hover:not(:disabled) {
+      background: #7dd3fc;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="presentation-container">
+    <!-- Header -->
+    <header class="presentation-header">
+      <span class="topic-pill">C# Iteration &bull; 10th Grade CS</span>
+      <div class="slide-counter" id="slideCounter">Slide 1 of 11</div>
+    </header>
+
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <!-- Main Viewport -->
+    <main class="slide-viewport">
+
+            <!-- SLIDE 1: Why & When "for" Loops Are Needed -->
+      <section class="slide-view active" id="slide-0">
+        <div class="slide-header">
+          <h1 class="slide-headline"><span>🔁</span> Why &amp; When: C# "for" Loops</h1>
+          <div class="bilingual-chip">
+            <span class="en-term">Loop</span>
+            <span class="lang-tag">HE:</span> <bdi class="rtl-term" dir="rtl">לולאה</bdi>
+            <span class="lang-tag">AR:</span> <bdi class="rtl-term" dir="rtl">حلقة تكرار</bdi>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <!-- The Problem: Repetition -->
+          <div class="code-card">
+            <div class="card-top">
+              <span class="card-title">❌ The Problem: Copy-Pasting Code</span>
+            </div>
+            <div class="card-code">
+              <pre><span class="code-comment">// Need to print a countdown or 100 game items?</span>
+<span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">"Player 1 Ready!"</span>);
+<span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">"Player 2 Ready!"</span>);
+<span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">"Player 3 Ready!"</span>);
+<span class="code-comment">// ... repeating this 100 times is error-prone</span>
+<span class="code-comment">// and impossible for dynamic quantities!</span></pre>
+            </div>
+            <div class="card-output">
+              <span>&gt; Clutters code, hard to edit, inflexible</span>
+            </div>
+          </div>
+
+          <!-- When to Use a for Loop -->
+          <div class="code-card">
+            <div class="card-top">
+              <span class="card-title">✅ When to Use a "for" Loop</span>
+            </div>
+            <div class="card-code">
+              <pre><span class="code-comment">// Use a "for" loop whenever you know IN ADVANCE</span>
+<span class="code-comment">// how many times a task needs to repeat:</span>
+
+<span class="code-comment">// 1. Repeating an exact count (e.g. 10 rounds, 5 laps)</span>
+<span class="code-comment">// 2. Stepping through a range of numbers (1 to 100)</span>
+<span class="code-comment">// 3. Counting down (10 down to 1 for rocket launch)</span>
+<span class="code-comment">// 4. Processing arrays and lists of items</span></pre>
+            </div>
+            <div class="card-output">
+              <span>&gt; Rule: Known repetition count = for loop!</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="key-idea-banner">
+          <span>💡</span>
+          <div><strong>Core Idea:</strong> Instead of writing repetitive code manually, a <code>for</code> loop lets you write the action ONCE and command C# to repeat it automatically.</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 2: Structure of a for Loop (Start State, Stop Condition, Increment) -->
+      <section class="slide-view" id="slide-10">
+        <div class="slide-header">
+          <h1 class="slide-headline"><span>🏗️</span> Structure of a "for" Loop</h1>
+          <div class="bilingual-chip">
+            <span class="en-term">Loop Structure</span>
+            <span class="lang-tag">HE:</span> <bdi class="rtl-term" dir="rtl">מבנה הלולאה</bdi>
+            <span class="lang-tag">AR:</span> <bdi class="rtl-term" dir="rtl">بنية حلقة التكرار</bdi>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <!-- The 3 Core Components -->
+          <div class="code-card">
+            <div class="card-top">
+              <span class="card-title">The 3 Core Components</span>
+            </div>
+            <div class="card-code">
+              <pre><span class="code-comment">//   (1) START STATE   ; (2) STOP CONDITION ; (3) INCREMENT</span>
+<span class="code-keyword">for</span> (<span class="code-type">int</span> i = <span class="code-number">1</span>         ; i &lt;= <span class="code-number">5</span>             ; i++)
+{
+    <span class="code-comment">// (4) LOOP BODY: Executes every valid round</span>
+    <span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">$"Round: {i}"</span>);
+}
+
+<span class="code-comment">// 1. START STATE:    int i = 1 (Runs ONCE at beginning)</span>
+<span class="code-comment">// 2. STOP CONDITION: i &lt;= 5    (Tested BEFORE each round)</span>
+<span class="code-comment">// 3. INCREMENT:      i++       (Executed AFTER each round)</span></pre>
+            </div>
+            <div class="card-output">
+              <span>&gt; HE: אתחול ➔ תנאי עצירה ➔ קידום</span>
+            </div>
+          </div>
+
+          <!-- Execution Order Lifecycle -->
+          <div class="code-card">
+            <div class="card-top">
+              <span class="card-title">Execution Lifecycle (Behind the Scenes)</span>
+            </div>
+            <div class="card-code">
+              <pre><span class="code-comment">// Exact sequence C# follows step-by-step:</span>
+
+<span class="code-comment">// Step 1: Initialize Start State (int i = 1) - ONLY ONCE!</span>
+<span class="code-comment">// Step 2: Test Condition (Is i &lt;= 5 ?)</span>
+<span class="code-comment">//         ➔ TRUE:  Run the body code inside { }</span>
+<span class="code-comment">//         ➔ FALSE: EXIT the loop immediately!</span>
+<span class="code-comment">// Step 3: Run Increment (i++) to advance counter</span>
+<span class="code-comment">// Step 4: Jump back to Step 2 and test again!</span></pre>
+            </div>
+            <div class="card-output">
+              <span>&gt; Cycle: 1. Init ➔ 2. Check ➔ 3. Body ➔ 4. Step ➔ Repeat</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="key-idea-banner">
+          <span>⚙️</span>
+          <div><strong>Anatomy Rule:</strong> <code>for (Start; Condition; Step)</code> &mdash; Initializer sets the counter, Condition decides whether to continue, and Step moves the counter forward.</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 3: Example 1 - Level 1 (Basic Counting Up) -->
+      <section class="slide-view" id="slide-1">
+        <div class="slide-header">
+          <h1 class="slide-headline"><span>🏃</span> Ex 1: Basic Counting (1 to 5)</h1>
+          <div class="difficulty-badge">⭐ Level 1 of 8 (Basic)</div>
+        </div>
+
+        <div class="code-card full-width">
+          <div class="card-top">
+            <span class="card-title">Counting Laps Around the Track</span>
+            <div class="bilingual-chip">
+              <span class="en-term">Increment</span>
+              <span class="lang-tag">HE:</span> <bdi class="rtl-term" dir="rtl">קידום מונה (i++)</bdi>
+              <span class="lang-tag">AR:</span> <bdi class="rtl-term" dir="rtl">زيادة العداد</bdi>
+            </div>
+          </div>
+          <div class="card-code">
+            <pre><span class="code-comment">// Loop starts at i = 1, runs while i &lt;= 5, increases by 1 each round</span>
+<span class="code-keyword">for</span> (<span class="code-type">int</span> lap = <span class="code-number">1</span>; lap &lt;= <span class="code-number">5</span>; lap++)
+{
+    <span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">$"Lap {lap} completed! Keep running!"</span>);
+}
+
+<span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">"🏁 Race Finished! Great job!"</span>);</pre>
+          </div>
+          <div class="card-output">
+            <span>&gt; Output: Lap 1 completed! ➔ Lap 2 ➔ Lap 3 ➔ Lap 4 ➔ Lap 5 ➔ Race Finished!</span>
+          </div>
+        </div>
+
+        <div class="key-idea-banner">
+          <span>📌</span>
+          <div><strong>How it steps:</strong> <code>lap</code> begins at 1. After printing, <code>lap++</code> turns it into 2, 3, 4, 5. When it hits 6, <code>6 &lt;= 5</code> is false and the loop terminates.</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 4: Example 2 - Level 2 (Countdown with i--) -->
+      <section class="slide-view" id="slide-2">
+        <div class="slide-header">
+          <h1 class="slide-headline"><span>🚀</span> Ex 2: Rocket Countdown (i--)</h1>
+          <div class="difficulty-badge">⭐⭐ Level 2 of 8 (Decrement)</div>
+        </div>
+
+        <div class="code-card full-width">
+          <div class="card-top">
+            <span class="card-title">Counting Backwards with Decrement</span>
+            <div class="bilingual-chip">
+              <span class="en-term">Decrement</span>
+              <span class="lang-tag">HE:</span> <bdi class="rtl-term" dir="rtl">הפחתה (i--)</bdi>
+              <span class="lang-tag">AR:</span> <bdi class="rtl-term" dir="rtl">إنقاص العداد</bdi>
+            </div>
+          </div>
+          <div class="card-code">
+            <pre><span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">"Mission Control: Launch countdown initiated!"</span>);
+
+<span class="code-comment">// Start at 5, stay in loop while count &gt;= 1, subtract 1 each round:</span>
+<span class="code-keyword">for</span> (<span class="code-type">int</span> count = <span class="code-number">5</span>; count &gt;= <span class="code-number">1</span>; count--)
+{
+    <span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">$"T-minus {count}..."</span>);
+}
+
+<span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">"🔥 LIFTOFF! Spacecraft launched into orbit!"</span>);</pre>
+          </div>
+          <div class="card-output">
+            <span>&gt; Output: T-minus 5... ➔ 4... ➔ 3... ➔ 2... ➔ 1... ➔ LIFTOFF!</span>
+          </div>
+        </div>
+
+        <div class="key-idea-banner">
+          <span>🎯</span>
+          <div><strong>Key Mechanism:</strong> Use <code>count--</code> to count down. Always ensure your condition tests for the lower bound (e.g., <code>count &gt;= 1</code>) to prevent an infinite loop!</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 5: Example 3 - Level 3 (Accumulator Pattern) -->
+      <section class="slide-view" id="slide-3">
+        <div class="slide-header">
+          <h1 class="slide-headline"><span>➕</span> Ex 3: Accumulator (Sum of 1 to 10)</h1>
+          <div class="difficulty-badge">⭐⭐⭐ Level 3 of 8 (Accumulator)</div>
+        </div>
+
+        <div class="code-card full-width">
+          <div class="card-top">
+            <span class="card-title">Summing Numbers with an External Total</span>
+            <div class="bilingual-chip">
+              <span class="en-term">Accumulator</span>
+              <span class="lang-tag">HE:</span> <bdi class="rtl-term" dir="rtl">צובר סכום</bdi>
+              <span class="lang-tag">AR:</span> <bdi class="rtl-term" dir="rtl">مجمع المجموع</bdi>
+            </div>
+          </div>
+          <div class="card-code">
+            <pre><span class="code-comment">// Declare the accumulator variable OUTSIDE the loop:</span>
+<span class="code-type">int</span> totalSum = <span class="code-number">0</span>;
+
+<span class="code-comment">// Add every number from 1 up to 10 into totalSum:</span>
+<span class="code-keyword">for</span> (<span class="code-type">int</span> i = <span class="code-number">1</span>; i &lt;= <span class="code-number">10</span>; i++)
+{
+    totalSum += i; <span class="code-comment">// Same as: totalSum = totalSum + i</span>
+}
+
+<span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">$"The total sum of numbers 1 to 10 is: {totalSum}"</span>);</pre>
+          </div>
+          <div class="card-output">
+            <span>&gt; Output: The total sum of numbers 1 to 10 is: 55</span>
+          </div>
+        </div>
+
+        <div class="key-idea-banner">
+          <span>🧠</span>
+          <div><strong>Scope Trap:</strong> Always declare <code>totalSum</code> <em>before</em> the loop! If you declare it inside, it gets reset to 0 every iteration.</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 6: Example 4 - Level 4 (Loop with if Logic: Even Numbers) -->
+      <section class="slide-view" id="slide-4">
+        <div class="slide-header">
+          <h1 class="slide-headline"><span>🔍</span> Ex 4: Loop + "if" Filter (Even Numbers)</h1>
+          <div class="difficulty-badge">⭐⭐⭐⭐ Level 4 of 8 (Filter)</div>
+        </div>
+
+        <div class="code-card full-width">
+          <div class="card-top">
+            <span class="card-title">Filtering Values with Modulo (%) Inside a Loop</span>
+            <div class="bilingual-chip">
+              <span class="en-term">Filter</span>
+              <span class="lang-tag">HE:</span> <bdi class="rtl-term" dir="rtl">סינון תנאי בתוך לולאה</bdi>
+              <span class="lang-tag">AR:</span> <bdi class="rtl-term" dir="rtl">تصفية الشروط داخل الحلقة</bdi>
+            </div>
+          </div>
+          <div class="card-code">
+            <pre><span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">"Scanning numbers from 1 to 12 for EVENS:"</span>);
+
+<span class="code-keyword">for</span> (<span class="code-type">int</span> num = <span class="code-number">1</span>; num &lt;= <span class="code-number">12</span>; num++)
+{
+    <span class="code-comment">// "if" condition tests if number divided by 2 has 0 remainder:</span>
+    <span class="code-keyword">if</span> (num % <span class="code-number">2</span> == <span class="code-number">0</span>)
+    {
+        <span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">$"Found Even Number: {num} (זוגי)"</span>);
+    }
+}</pre>
+          </div>
+          <div class="card-output">
+            <span>&gt; Output: Found Even: 2 ➔ 4 ➔ 6 ➔ 8 ➔ 10 ➔ 12</span>
+          </div>
+        </div>
+
+        <div class="key-idea-banner">
+          <span>⚡</span>
+          <div><strong>Combining Power:</strong> The loop visits every number; the <code>if</code> condition filters out which ones get printed or processed.</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 7: Example 5 - Level 5 (Search with if & break) -->
+      <section class="slide-view" id="slide-5">
+        <div class="slide-header">
+          <h1 class="slide-headline"><span>🎯</span> Ex 5: Target Search with "break"</h1>
+          <div class="difficulty-badge">⭐⭐⭐⭐⭐ Level 5 of 8 (Search)</div>
+        </div>
+
+        <div class="code-card full-width">
+          <div class="card-top">
+            <span class="card-title">Early Loop Termination with "break"</span>
+            <div class="bilingual-chip">
+              <span class="en-term">Break</span>
+              <span class="lang-tag">HE:</span> <bdi class="rtl-term" dir="rtl">יציאה מוקדמת מהלולאה</bdi>
+              <span class="lang-tag">AR:</span> <bdi class="rtl-term" dir="rtl">إنهاء مبكر للحلقة</bdi>
+            </div>
+          </div>
+          <div class="card-code">
+            <pre><span class="code-type">int</span> targetScore = <span class="code-number">7</span>;
+
+<span class="code-keyword">for</span> (<span class="code-type">int</span> attempt = <span class="code-number">1</span>; attempt &lt;= <span class="code-number">10</span>; attempt++)
+{
+    <span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">$"Checking chest #{attempt}..."</span>);
+
+    <span class="code-comment">// If we find our target, stop wasting time and exit!</span>
+    <span class="code-keyword">if</span> (attempt == targetScore)
+    {
+        <span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">$"🏆 Treasure unlocked at chest #{attempt}! Stopping search."</span>);
+        <span class="code-keyword">break</span>; <span class="code-comment">// Immediately stops the loop!</span>
+    }
+}</pre>
+          </div>
+          <div class="card-output">
+            <span>&gt; Output: Checking 1... ➔ 2... ➔ ... ➔ Treasure unlocked at chest #7! Stopping search.</span>
+          </div>
+        </div>
+
+        <div class="key-idea-banner">
+          <span>🛑</span>
+          <div><strong>Efficiency:</strong> <code>break</code> saves computer power. Once your condition finds what you need, exit immediately instead of running remaining rounds!</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 8: Example 6 - Level 6 (User-Driven Multiplication Table) -->
+      <section class="slide-view" id="slide-6">
+        <div class="slide-header">
+          <h1 class="slide-headline"><span>⌨️</span> Ex 6: User-Driven Math Table</h1>
+          <div class="difficulty-badge">⭐⭐⭐⭐⭐⭐ Level 6 of 8 (Dynamic)</div>
+        </div>
+
+        <div class="code-card full-width">
+          <div class="card-top">
+            <span class="card-title">Combining Console Input with a Multiplication Loop</span>
+            <div class="bilingual-chip">
+              <span class="en-term">User Input</span>
+              <span class="lang-tag">HE:</span> <bdi class="rtl-term" dir="rtl">קלט דינמי</bdi>
+              <span class="lang-tag">AR:</span> <bdi class="rtl-term" dir="rtl">إدخال ديناميكي</bdi>
+            </div>
+          </div>
+          <div class="card-code">
+            <pre><span class="code-type">Console</span>.<span class="code-method">Write</span>(<span class="code-string">"Enter number for multiplication table: "</span>);
+<span class="code-type">int</span> tableNum = <span class="code-type">int</span>.<span class="code-method">Parse</span>(<span class="code-type">Console</span>.<span class="code-method">ReadLine</span>()); <span class="code-comment">// e.g. User types 8</span>
+
+<span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">$"=== Multiplication Table for {tableNum} ==="</span>);
+
+<span class="code-keyword">for</span> (<span class="code-type">int</span> mult = <span class="code-number">1</span>; mult &lt;= <span class="code-number">10</span>; mult++)
+{
+    <span class="code-type">int</span> product = tableNum * mult;
+    <span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">$"  {tableNum} x {mult,2} = {product,3}"</span>);
+}</pre>
+          </div>
+          <div class="card-output">
+            <span>&gt; Input: 8 ➔ Prints: 8x1=8, 8x2=16, 8x3=24 ... 8x10=80</span>
+          </div>
+        </div>
+
+        <div class="key-idea-banner">
+          <span>🚀</span>
+          <div><strong>Flexibility:</strong> By reading the number from <code>Console.ReadLine()</code>, the loop works dynamically for any number the student chooses!</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 9: Example 7 - Level 7 (Multi-Branch Conditional Counting) -->
+      <section class="slide-view" id="slide-7">
+        <div class="slide-header">
+          <h1 class="slide-headline"><span>📊</span> Ex 7: Pass / Fail Grade Counter</h1>
+          <div class="difficulty-badge">⭐⭐⭐⭐⭐⭐⭐ Level 7 of 8 (Counter)</div>
+        </div>
+
+        <div class="code-card full-width">
+          <div class="card-top">
+            <span class="card-title">Looping with if / else and Tracking Multiple Tallies</span>
+            <div class="bilingual-chip">
+              <span class="en-term">Tally</span>
+              <span class="lang-tag">HE:</span> <bdi class="rtl-term" dir="rtl">ספירת מונים</bdi>
+              <span class="lang-tag">AR:</span> <bdi class="rtl-term" dir="rtl">إحصاء النتائج</bdi>
+            </div>
+          </div>
+          <div class="card-code">
+            <pre><span class="code-type">int</span> passedCount = <span class="code-number">0</span>;
+<span class="code-type">int</span> failedCount = <span class="code-number">0</span>;
+
+<span class="code-comment">// Step through student grades by +15: (45, 60, 75, 90)</span>
+<span class="code-keyword">for</span> (<span class="code-type">int</span> grade = <span class="code-number">45</span>; grade &lt;= <span class="code-number">90</span>; grade += <span class="code-number">15</span>)
+{
+    <span class="code-keyword">if</span> (grade &gt;= <span class="code-number">60</span>)
+    {
+        passedCount++;
+        <span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">$"Grade {grade}: PASS (עובר / ناجح)"</span>);
+    }
+    <span class="code-keyword">else</span>
+    {
+        failedCount++;
+        <span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">$"Grade {grade}: FAIL (נכשל / راسب)"</span>);
+    }
+}
+<span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">$"Total Passed: {passedCount} | Total Failed: {failedCount}"</span>);</pre>
+          </div>
+          <div class="card-output">
+            <span>&gt; Output: Grade 45: FAIL, 60: PASS, 75: PASS, 90: PASS | Passed: 3, Failed: 1</span>
+          </div>
+        </div>
+
+        <div class="key-idea-banner">
+          <span>📈</span>
+          <div><strong>Data Analytics:</strong> Combining loops with <code>if/else</code> counters is how real software calculates test averages and attendance statistics!</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 10: Example 8 - Level 8 (Nested Loops: 2D Star Pattern) -->
+      <section class="slide-view" id="slide-8">
+        <div class="slide-header">
+          <h1 class="slide-headline"><span>⭐</span> Ex 8: Nested Loop Star Pattern</h1>
+          <div class="difficulty-badge">⭐⭐⭐⭐⭐⭐⭐⭐ Level 8 of 8 (Nested)</div>
+        </div>
+
+        <div class="code-card full-width">
+          <div class="card-top">
+            <span class="card-title">Loop Inside a Loop for Rows and Columns</span>
+            <div class="bilingual-chip">
+              <span class="en-term">Nested</span>
+              <span class="lang-tag">HE:</span> <bdi class="rtl-term" dir="rtl">לולאות מקוננות</bdi>
+              <span class="lang-tag">AR:</span> <bdi class="rtl-term" dir="rtl">حلقات متداخلة</bdi>
+            </div>
+          </div>
+          <div class="card-code">
+            <pre><span class="code-type">int</span> totalRows = <span class="code-number">4</span>;
+
+<span class="code-comment">// Outer loop controls the ROW:</span>
+<span class="code-keyword">for</span> (<span class="code-type">int</span> row = <span class="code-number">1</span>; row &lt;= totalRows; row++)
+{
+    <span class="code-type">string</span> stars = <span class="code-string">""</span>;
+
+    <span class="code-comment">// Inner loop controls how many STARS per row:</span>
+    <span class="code-keyword">for</span> (<span class="code-type">int</span> col = <span class="code-number">1</span>; col &lt;= row; col++)
+    {
+        stars += <span class="code-string">"* "</span>;
+    }
+    <span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(stars);
+}</pre>
+          </div>
+          <div class="card-output">
+            <span>&gt; Output: Prints 4 rows: * ➔ * * ➔ * * * ➔ * * * *</span>
+          </div>
+        </div>
+
+        <div class="key-idea-banner">
+          <span>🧱</span>
+          <div><strong>2D Thinking:</strong> The outer loop changes the line; the inner loop fills the line. This is how 2D game grids and pixels work!</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 11: Comprehension Check Quiz -->
+      <section class="slide-view" id="slide-9">
+        <div class="slide-header">
+          <h1 class="slide-headline"><span>🧪</span> Comprehension Check: Predict the Loops</h1>
+          <div class="bilingual-chip">
+            <span class="en-term">Quiz</span>
+            <span class="lang-tag">HE:</span> <bdi class="rtl-term" dir="rtl">שאלות הבנה</bdi>
+            <span class="lang-tag">AR:</span> <bdi class="rtl-term" dir="rtl">أسئلة الفهم</bdi>
+          </div>
+        </div>
+
+        <div class="quiz-container">
+          <!-- Quiz 1: Boundary & Execution Count -->
+          <div class="quiz-card">
+            <div class="quiz-question">Question 1: How many times does this loop run?</div>
+            <div class="card-code" style="border-radius: 8px;">
+              <pre><span class="code-keyword">for</span> (<span class="code-type">int</span> i = <span class="code-number">0</span>; i &lt; <span class="code-number">6</span>; i += <span class="code-number">2</span>)
+{
+    <span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(i);
+}</pre>
+            </div>
+            <button class="reveal-btn" data-target="ans-1">
+              <span>👁️</span> Click to Reveal Answer
+            </button>
+            <div class="answer-panel" id="ans-1">
+              <strong>Answer: Exactly 3 times!</strong><br>
+              <span style="font-size: 0.95rem; color: #cbd5e1;">Values of <code>i</code> are <code>0</code>, <code>2</code>, and <code>4</code>. When <code>i</code> becomes <code>6</code>, the condition <code>6 &lt; 6</code> is false, so it stops.</span>
+            </div>
+          </div>
+
+          <!-- Quiz 2: Loop + If Accumulator -->
+          <div class="quiz-card">
+            <div class="quiz-question">Question 2: What is the final value of "total"?</div>
+            <div class="card-code" style="border-radius: 8px;">
+              <pre><span class="code-type">int</span> total = <span class="code-number">0</span>;
+
+<span class="code-keyword">for</span> (<span class="code-type">int</span> i = <span class="code-number">1</span>; i &lt;= <span class="code-number">4</span>; i++)
+{
+    <span class="code-keyword">if</span> (i != <span class="code-number">3</span>) total += i;
+}
+<span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(total);</pre>
+            </div>
+            <button class="reveal-btn" data-target="ans-2">
+              <span>👁️</span> Click to Reveal Answer
+            </button>
+            <div class="answer-panel" id="ans-2">
+              <strong>Answer: 7</strong><br>
+              <span style="font-size: 0.95rem; color: #cbd5e1;">The loop visits <code>1, 2, 3, 4</code>. When <code>i == 3</code>, the <code>if</code> condition skips addition. Total = <code>1 + 2 + 4 = 7</code>.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="key-idea-banner">
+          <span>🚀</span>
+          <div><strong>Coding Challenge:</strong> Write a <code>for</code> loop that calculates the factorial of 5: <code>1 * 2 * 3 * 4 * 5 = 120</code>! (Hint: start total at 1, not 0!).</div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer Controls -->
+    <footer class="presentation-footer">
+      <div>
+        <span class="key-badge">◀ Left Arrow</span>
+        <span class="key-badge">Right Arrow ▶</span>
+        <span class="key-badge">Space</span>
+      </div>
+
+      <div class="nav-buttons">
+        <button class="nav-btn" id="prevBtn" disabled>
+          <span>◀</span> Prev
+        </button>
+        <button class="nav-btn primary" id="nextBtn">
+          Next <span>▶</span>
+        </button>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    (function() {
+      const totalSlides = 11;
+      let currentSlide = 0;
+
+      const slides = document.querySelectorAll('.slide-view');
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      const slideCounter = document.getElementById('slideCounter');
+      const progressFill = document.getElementById('progressFill');
+
+      function updateSlide(newIndex) {
+        if (newIndex < 0 || newIndex >= totalSlides) return;
+
+        slides[currentSlide].classList.remove('active');
+        currentSlide = newIndex;
+        slides[currentSlide].classList.add('active');
+
+        slideCounter.textContent = 'Slide ' + (currentSlide + 1) + ' of ' + totalSlides;
+        const percent = ((currentSlide + 1) / totalSlides) * 100;
+        progressFill.style.width = percent + '%';
+
+        prevBtn.disabled = (currentSlide === 0);
+        if (currentSlide === totalSlides - 1) {
+          nextBtn.innerHTML = 'Restart <span>↺</span>';
+        } else {
+          nextBtn.innerHTML = 'Next <span>▶</span>';
+        }
+      }
+
+      prevBtn.addEventListener('click', function() {
+        updateSlide(currentSlide - 1);
+      });
+
+      nextBtn.addEventListener('click', function() {
+        if (currentSlide < totalSlides - 1) {
+          updateSlide(currentSlide + 1);
+        } else {
+          updateSlide(0);
+        }
+      });
+
+      window.addEventListener('keydown', function(e) {
+        if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
+
+        if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+          e.preventDefault();
+          if (currentSlide < totalSlides - 1) updateSlide(currentSlide + 1);
+        } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+          e.preventDefault();
+          if (currentSlide > 0) updateSlide(currentSlide - 1);
+        } else if (e.key === 'Home') {
+          e.preventDefault();
+          updateSlide(0);
+        } else if (e.key === 'End') {
+          e.preventDefault();
+          updateSlide(totalSlides - 1);
+        }
+      });
+
+      const revealBtns = document.querySelectorAll('.reveal-btn');
+      revealBtns.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          const targetId = this.getAttribute('data-target');
+          const panel = document.getElementById(targetId);
+          if (panel) {
+            const isShowing = panel.classList.contains('show');
+            if (isShowing) {
+              panel.classList.remove('show');
+              this.innerHTML = '<span>👁️</span> Click to Reveal Answer';
+            } else {
+              panel.classList.add('show');
+              this.innerHTML = '<span>🙈</span> Hide Answer';
+            }
+          }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
