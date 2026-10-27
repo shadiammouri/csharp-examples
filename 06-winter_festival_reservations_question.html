@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="ar" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C# Step-by-Step Problem Solving: Winter Festival Reservations</title>
+  <style>
+    :root {
+      --bg-dark: #0a0e1a;
+      --card-bg: #121929;
+      --card-border: #26354f;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-cyan: #38bdf8;
+      --accent-purple: #c084fc;
+      --accent-emerald: #34d399;
+      --accent-amber: #fbbf24;
+      --accent-rose: #f43f5e;
+      --code-bg: #030712;
+      --keyword-color: #f472b6;
+      --type-color: #38bdf8;
+      --string-color: #a3e635;
+      --number-color: #fb923c;
+      --comment-color: #64748b;
+      --method-color: #fbbf24;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+      overflow-x: hidden;
+    }
+
+    /* 16:9 Projector Widescreen Container */
+    .presentation-container {
+      width: 100%;
+      max-width: 1280px;
+      min-height: 720px;
+      aspect-ratio: 16 / 9;
+      background: var(--card-bg);
+      border: 2px solid var(--card-border);
+      border-radius: 18px;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Top Navigation Header */
+    .presentation-header {
+      padding: 12px 28px;
+      background: rgba(10, 14, 26, 0.92);
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .topic-pill {
+      background: rgba(56, 189, 248, 0.2);
+      color: var(--accent-cyan);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      padding: 4px 14px;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .slide-counter {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      background: rgba(15, 23, 42, 0.85);
+      padding: 5px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--card-border);
+    }
+
+    .progress-bar {
+      height: 5px;
+      background: #1e293b;
+      width: 100%;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+      width: 20%;
+      transition: width 0.3s ease;
+    }
+
+    /* Slide Viewport */
+    .slide-viewport {
+      flex: 1;
+      padding: 20px 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+
+    .slide-view {
+      display: none;
+      flex-direction: column;
+      height: 100%;
+      animation: fadeIn 0.25s ease-out forwards;
+      justify-content: space-between;
+    }
+
+    .slide-view.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Slide Titles & Step Badges */
+    .slide-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .slide-headline {
+      font-size: 1.85rem;
+      font-weight: 800;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .step-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(192, 132, 252, 0.18);
+      border: 1px solid rgba(192, 132, 252, 0.45);
+      color: var(--accent-purple);
+      padding: 4px 12px;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* 2-Column Split: Left (Question Text as-is), Right (Step Explanation & Code) */
+    .split-grid {
+      display: grid;
+      grid-template-columns: 0.92fr 1.08fr;
+      gap: 20px;
+      flex: 1;
+      align-items: stretch;
+      overflow: hidden;
+    }
+
+    /* Left Column: Authentic Question Card (RTL) */
+    .question-card {
+      background: rgba(15, 23, 42, 0.85);
+      border: 1.5px solid var(--card-border);
+      border-radius: 14px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      direction: rtl;
+      text-align: right;
+    }
+
+    .question-card-header {
+      padding: 10px 18px;
+      background: rgba(255, 255, 255, 0.04);
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      direction: rtl;
+    }
+
+    .question-card-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--accent-amber);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .question-pill {
+      font-size: 0.78rem;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: rgba(251, 191, 36, 0.15);
+      border: 1px solid rgba(251, 191, 36, 0.35);
+      color: var(--accent-amber);
+      font-weight: 600;
+    }
+
+    .question-body {
+      padding: 16px 20px;
+      font-family: "Segoe UI", "Cairo", Tahoma, sans-serif;
+      font-size: 1.02rem;
+      line-height: 1.7;
+      color: #e2e8f0;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 12px;
+      overflow-y: auto;
+    }
+
+    .question-intro {
+      color: #f8fafc;
+      font-weight: 500;
+    }
+
+    .question-task-list {
+      list-style-type: none;
+      padding-right: 0;
+      margin: 4px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .question-task-list li {
+      position: relative;
+      padding-right: 24px;
+      font-size: 0.98rem;
+      color: #cbd5e1;
+    }
+
+    .question-task-list li .num-bullet {
+      position: absolute;
+      right: 0;
+      top: 0;
+      color: var(--accent-cyan);
+      font-weight: 700;
+    }
+
+    .question-output-reqs {
+      background: rgba(56, 189, 248, 0.08);
+      border-right: 3px solid var(--accent-cyan);
+      padding: 8px 12px;
+      border-radius: 4px 0 0 4px;
+      font-size: 0.92rem;
+      color: #cbd5e1;
+    }
+
+    .question-output-reqs strong {
+      color: var(--accent-cyan);
+    }
+
+    .highlight-target {
+      background: rgba(251, 191, 36, 0.22);
+      border-radius: 4px;
+      padding: 1px 4px;
+      border-bottom: 2px solid var(--accent-amber);
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    /* Right Column: Step Content Card (LTR) */
+    .step-card {
+      background: var(--code-bg);
+      border: 1.5px solid var(--card-border);
+      border-radius: 14px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      direction: ltr;
+      text-align: left;
+    }
+
+    .step-card-header {
+      padding: 10px 18px;
+      background: rgba(255, 255, 255, 0.04);
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .step-card-title {
+      font-size: 1.08rem;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .bilingual-tag {
+      font-size: 0.8rem;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: rgba(192, 132, 252, 0.15);
+      border: 1px solid rgba(192, 132, 252, 0.3);
+      color: var(--accent-purple);
+      font-weight: 600;
+    }
+
+    .step-card-body {
+      padding: 16px 20px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: 12px;
+      overflow-y: auto;
+    }
+
+    /* Monospace Code Display */
+    .code-box {
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 1.05rem;
+      line-height: 1.52;
+      color: #e2e8f0;
+      background: #020617;
+      border: 1px solid #1e293b;
+      border-radius: 10px;
+      padding: 14px 16px;
+      overflow-x: auto;
+      flex: 1;
+    }
+
+    .code-box pre {
+      margin: 0;
+      white-space: pre;
+    }
+
+    /* Simulation Table */
+    .sim-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+      background: #020617;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid #1e293b;
+    }
+
+    .sim-table th {
+      background: #0f172a;
+      color: var(--accent-cyan);
+      padding: 8px 12px;
+      text-align: left;
+      font-weight: 700;
+      border-bottom: 1px solid #1e293b;
+    }
+
+    .sim-table td {
+      padding: 8px 12px;
+      border-bottom: 1px solid rgba(30, 41, 59, 0.6);
+      color: #e2e8f0;
+    }
+
+    .sim-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .sim-table .highlight-row {
+      background: rgba(56, 189, 248, 0.08);
+      font-weight: 600;
+    }
+
+    /* Output Console Preview Box */
+    .console-preview {
+      background: #000000;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-family: Consolas, monospace;
+      font-size: 0.92rem;
+      color: var(--accent-emerald);
+      line-height: 1.45;
+    }
+
+    .console-preview .label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+    }
+
+    /* Variable Pill Grid */
+    .vars-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .var-pill {
+      background: #020617;
+      border: 1px solid #1e293b;
+      border-radius: 8px;
+      padding: 8px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .var-pill .var-name {
+      font-family: Consolas, monospace;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      font-size: 0.95rem;
+    }
+
+    .var-pill .var-desc {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    /* Key Idea / Takeaway Banner */
+    .key-idea-banner {
+      background: rgba(56, 189, 248, 0.1);
+      border-left: 5px solid var(--accent-cyan);
+      padding: 8px 16px;
+      border-radius: 0 10px 10px 0;
+      font-size: 0.98rem;
+      font-weight: 500;
+      color: #f1f5f9;
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .key-idea-banner strong {
+      color: var(--accent-cyan);
+    }
+
+    /* Syntax Tokens */
+    .code-keyword { color: var(--keyword-color); font-weight: 700; }
+    .code-type { color: var(--type-color); font-weight: 700; }
+    .code-string { color: var(--string-color); }
+    .code-number { color: var(--number-color); font-weight: 600; }
+    .code-comment { color: var(--comment-color); font-style: italic; }
+    .code-method { color: var(--method-color); }
+    .code-placeholder { color: #f43f5e; font-weight: 700; background: rgba(244, 63, 94, 0.15); padding: 1px 4px; border-radius: 3px; }
+
+    /* Footer Controls */
+    .presentation-footer {
+      padding: 12px 28px;
+      background: rgba(10, 14, 26, 0.92);
+      border-top: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .key-badge {
+      background: #1e293b;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-family: monospace;
+      color: #94a3b8;
+      border: 1px solid #334155;
+      font-size: 0.85rem;
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: 12px;
+    }
+
+    .nav-btn {
+      background: #1e293b;
+      border: 1px solid var(--card-border);
+      color: #ffffff;
+      padding: 9px 20px;
+      border-radius: 8px;
+      font-size: 0.98rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .nav-btn:hover:not(:disabled) {
+      background: #334155;
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    .nav-btn.primary {
+      background: var(--accent-cyan);
+      color: #0b0f19;
+      border-color: var(--accent-cyan);
+    }
+
+    .nav-btn.primary:hover:not(:disabled) {
+      background: #7dd3fc;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="presentation-container">
+    <!-- Header -->
+    <header class="presentation-header">
+      <div class="topic-pill">
+        <span>❄️</span> C# Step-by-Step Problem Solving &bull; 10th Grade CS
+      </div>
+      <div class="slide-counter" id="slideCounter">Step 1 of 5</div>
+    </header>
+
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <!-- Main Viewport -->
+    <main class="slide-viewport">
+
+      <!-- SLIDE 1: Step 1 - Understanding Requirements & I/O Example -->
+      <section class="slide-view active" id="slide-0">
+        <div class="slide-header">
+          <h1 class="slide-headline"><span>🎯</span> Step 1: Understanding Requirements &amp; I/O Simulation</h1>
+          <div class="step-badge">Step 1 &bull; تحليل وفهم المعطيات</div>
+        </div>
+
+        <div class="split-grid">
+          <!-- Left: Question Text as-is with Highlight on Key Quantities -->
+          <div class="question-card">
+            <div class="question-card-header">
+              <span class="question-card-title"><span>📋</span> نص المسألة الأصلي (نص الامتحان)</span>
+              <span class="question-pill">مهرجان الشتاء</span>
+            </div>
+            <div class="question-body">
+              <p class="question-intro">
+                ينظم منظمو مهرجان الشتاء ثلاثة أيام من الفعاليات للعائلات في التواريخ: 
+                <span class="highlight-target">10، 12، و13 ديسمبر</span>.<br>
+                عدد العائلات المهتمة بالمشاركة هو <span class="highlight-target">500</span>، كل عائلة تحجز عددًا معينًا من التذاكر، سعر تذكرة الدخول <span class="highlight-target">30 شيكل للشخص الواحد</span>.<br>
+                عليكم حوسبة إدارة الحجوزات.
+              </p>
+              <div>
+                <strong>اكتب برنامجًا بلغة #C يقوم بما يلي:</strong>
+                <ul class="question-task-list">
+                  <li><span class="num-bullet">1.</span> يختار المستخدم تاريخًا واحدًا من الخيارات المتاحة للفعالية.</li>
+                  <li><span class="num-bullet">2.</span> يدخل المستخدم عدد الأشخاص الذين سيحضرون في التاريخ المختار.</li>
+                  <li><span class="num-bullet">3.</span> يقوم البرنامج بطباعة عدد الحجوزات لكل تاريخ على حدة.</li>
+                  <li><span class="num-bullet">4.</span> يقوم البرنامج بطباعة المدخول الكلي للمهرجان بناءً على جميع الحجوزات.</li>
+                </ul>
+              </div>
+              <div class="question-output-reqs">
+                <strong>في نهاية البرنامج يطبع على الشاشة ما يلي:</strong>
+                <div>&bull; عدد المشاركين في كل تاريخ.</div>
+                <div>&bull; المدخول الكلي من المهرجان.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Simple Text-Based Console Input / Output -->
+          <div class="step-card">
+            <div class="step-card-header">
+              <span class="step-card-title"><span>🖥️</span> Program Console Execution (Input / Output)</span>
+              <span class="bilingual-tag">شاشة تشغيل البرنامج</span>
+            </div>
+            <div class="step-card-body">
+              <div class="code-box" style="font-size: 1.05rem; line-height: 1.6; color: #f1f5f9; background: #000000; border-color: #334155;">
+                <pre>Enter event date (10, 12, or 13): 10
+Enter number of people: 4
+
+Enter event date (10, 12, or 13): 12
+Enter number of people: 5
+
+Enter event date (10, 12, or 13): 10
+Enter number of people: 3
+
+...
+[Data entry continues for all 500 families]
+...
+
+=== Festival Report ===
+Attendees on December 10: 1420
+Attendees on December 12: 1680
+Attendees on December 13: 1100
+Total festival revenue: 126000 NIS</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 2: Step 2 - Variable Definition & Program Skeleton -->
+      <section class="slide-view" id="slide-1">
+        <div class="slide-header">
+          <h1 class="slide-headline"><span>🏗️</span> Step 2: Defining Variables &amp; Program Skeleton</h1>
+          <div class="step-badge">Step 2 &bull; هيكل البرنامج والمتغيرات</div>
+        </div>
+
+        <div class="split-grid">
+          <!-- Left: Question Text as-is -->
+          <div class="question-card">
+            <div class="question-card-header">
+              <span class="question-card-title"><span>📋</span> نص المسألة الأصلي</span>
+              <span class="question-pill">المتغيرات المطلوبة</span>
+            </div>
+            <div class="question-body">
+              <p class="question-intro">
+                ينظم منظمو مهرجان الشتاء ثلاثة أيام من الفعاليات للعائلات في التواريخ: 10، 12، و13 ديسمبر.<br>
+                عدد العائلات المهتمة بالمشاركة هو <span class="highlight-target">500</span>، كل عائلة تحجز عددًا معينًا من التذاكر، سعر تذكرة الدخول <span class="highlight-target">30 شيكل للشخص الواحد</span>.<br>
+                عليكم حوسبة إدارة الحجوزات.
+              </p>
+              <div>
+                <strong>اكتب برنامجًا بلغة #C يقوم بما يلي:</strong>
+                <ul class="question-task-list">
+                  <li><span class="num-bullet">1.</span> يختار المستخدم تاريخًا واحدًا من الخيارات المتاحة للفعالية.</li>
+                  <li><span class="num-bullet">2.</span> يدخل المستخدم عدد الأشخاص الذين سيحضرون في التاريخ المختار.</li>
+                  <li><span class="num-bullet">3.</span> يقوم البرنامج بطباعة عدد الحجوزات لكل تاريخ على حدة.</li>
+                  <li><span class="num-bullet">4.</span> يقوم البرنامج بطباعة المدخول الكلي للمهرجان بناءً على جميع الحجوزات.</li>
+                </ul>
+              </div>
+              <div class="question-output-reqs">
+                <strong>المتغيرات الأساسية المطلوبة:</strong>
+                <div>&bull; عداد لكل تاريخ (مجمّع تراكمي / Accumulator) تبدأ من 0.</div>
+                <div>&bull; متغيرات القراءة داخل اللولاء: التاريخ (date) والعدد (people).</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Skeleton Code with Descriptive Comments -->
+          <div class="step-card">
+            <div class="step-card-header">
+              <span class="step-card-title"><span>📐</span> Program Architecture &amp; Skeleton</span>
+              <span class="bilingual-tag">השלד של התוכנית</span>
+            </div>
+            <div class="step-card-body">
+              <div class="code-box">
+                <pre><span class="code-comment">// 1. Accumulator variables for each date (عدادات تراكمية / מונים צוברים)</span>
+<span class="code-comment">// Declared outside before the loop, initialized to 0:</span>
+<span class="code-type">int</span> count10 = <span class="code-number">0</span>; <span class="code-comment">// Total attendees on December 10</span>
+<span class="code-type">int</span> count12 = <span class="code-number">0</span>; <span class="code-comment">// Total attendees on December 12</span>
+<span class="code-type">int</span> count13 = <span class="code-number">0</span>; <span class="code-comment">// Total attendees on December 13</span>
+
+<span class="code-comment">// 2. Loop through each of the 500 families (לולאה קבועה עבור 500 משפחות)</span>
+<span class="code-keyword">for</span> (<span class="code-type">int</span> i = <span class="code-number">1</span>; i &lt;= <span class="code-number">500</span>; i++)
+{
+    <span class="code-placeholder">// [Step 3]: Prompt user and read event date (10, 12, or 13)</span>
+    <span class="code-placeholder">// [Step 3]: Prompt user and read number of people attending</span>
+    <span class="code-placeholder">// [Step 3]: Accumulate into count10, count12, or count13 using if / else if</span>
+}
+
+<span class="code-comment">// 3. Post-loop calculations and printing (חישוב והדפסה בסיום התוכנית)</span>
+<span class="code-placeholder">// [Step 4]: Calculate total revenue = (count10 + count12 + count13) * 30</span>
+<span class="code-placeholder">// [Step 4]: Print attendees for each date and total festival revenue</span></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 3: Step 3 - Loop Body: Reading Input & if / else if Logic -->
+      <section class="slide-view" id="slide-2">
+        <div class="slide-header">
+          <h1 class="slide-headline"><span>🧩</span> Step 3: Reading Input &amp; Conditional Branching</h1>
+          <div class="step-badge">Step 3 &bull; الشروط والتفرع داخل اللولاء</div>
+        </div>
+
+        <div class="split-grid">
+          <!-- Left: Question Text with Focus on 1 & 2 -->
+          <div class="question-card">
+            <div class="question-card-header">
+              <span class="question-card-title"><span>📋</span> نص المسألة الأصلي</span>
+              <span class="question-pill">الخطوات 1 و 2</span>
+            </div>
+            <div class="question-body">
+              <p class="question-intro">
+                ينظم منظمو مهرجان الشتاء ثلاثة أيام من الفعاليات للعائلات في التواريخ: 10، 12، و13 ديسمبر.<br>
+                عدد العائلات المهتمة بالمشاركة هو 500، كل عائلة تحجز عددًا معينًا من التذاكر، سعر تذكرة الدخول 30 شيكل للشخص الواحد.<br>
+                عليكم حوسبة إدارة الحجوزات.
+              </p>
+              <div>
+                <strong>اكتب برنامجًا بلغة #C يقوم بما يلي:</strong>
+                <ul class="question-task-list">
+                  <li><span class="num-bullet">1.</span> <span class="highlight-target">يختار المستخدم تاريخًا واحدًا من الخيارات المتاحة للفعالية.</span></li>
+                  <li><span class="num-bullet">2.</span> <span class="highlight-target">يدخل المستخدم عدد الأشخاص الذين سيحضرون في التاريخ المختار.</span></li>
+                  <li><span class="num-bullet">3.</span> يقوم البرنامج بطباعة عدد الحجوزات لكل تاريخ على حدة.</li>
+                  <li><span class="num-bullet">4.</span> يقوم البرنامج بطباعة المدخول الكلي للمهرجان بناءً على جميع الحجوزات.</li>
+                </ul>
+              </div>
+              <div class="question-output-reqs">
+                <strong>المنطق الشرطي:</strong>
+                <div>التاريخ هو 10 أو 12 أو 13 فقط! نقوم بفحص التاريخ بـ <code>if / else if</code> ونضيف عدد الأشخاص للعداد المناسب.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Code Implementation of the Loop Body -->
+          <div class="step-card">
+            <div class="step-card-header">
+              <span class="step-card-title"><span>💻</span> Filling the Loop Body</span>
+              <span class="bilingual-tag">تفرع الشروط (if / else if)</span>
+            </div>
+            <div class="step-card-body">
+              <div class="code-box">
+                <pre><span class="code-keyword">for</span> (<span class="code-type">int</span> i = <span class="code-number">1</span>; i &lt;= <span class="code-number">500</span>; i++)
+{
+    <span class="code-type">Console</span>.<span class="code-method">Write</span>(<span class="code-string">"Enter event date (10, 12, or 13): "</span>);
+    <span class="code-type">int</span> date = <span class="code-type">int</span>.<span class="code-method">Parse</span>(<span class="code-type">Console</span>.<span class="code-method">ReadLine</span>());
+
+    <span class="code-type">Console</span>.<span class="code-method">Write</span>(<span class="code-string">"Enter number of people: "</span>);
+    <span class="code-type">int</span> people = <span class="code-type">int</span>.<span class="code-method">Parse</span>(<span class="code-type">Console</span>.<span class="code-method">ReadLine</span>());
+
+    <span class="code-comment">// Route and accumulate based on the chosen date:</span>
+    <span class="code-keyword">if</span> (date == <span class="code-number">10</span>)
+    {
+        count10 += people;
+    }
+    <span class="code-keyword">else if</span> (date == <span class="code-number">12</span>)
+    {
+        count12 += people;
+    }
+    <span class="code-keyword">else if</span> (date == <span class="code-number">13</span>)
+    {
+        count13 += people;
+    }
+}</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 4: Step 4 - Revenue Math & Final Printing -->
+      <section class="slide-view" id="slide-3">
+        <div class="slide-header">
+          <h1 class="slide-headline"><span>💰</span> Step 4: Revenue Math &amp; Summary Output</h1>
+          <div class="step-badge">Step 4 &bull; الحسابات والطباعة النهائية</div>
+        </div>
+
+        <div class="split-grid">
+          <!-- Left: Question Text with Focus on Output -->
+          <div class="question-card">
+            <div class="question-card-header">
+              <span class="question-card-title"><span>📋</span> نص المسألة الأصلي</span>
+              <span class="question-pill">المخرجات المطلوبة</span>
+            </div>
+            <div class="question-body">
+              <p class="question-intro">
+                ينظم منظمو مهرجان الشتاء ثلاثة أيام من الفعاليات للعائلات في التواريخ: 10، 12، و13 ديسمبر.<br>
+                عدد العائلات المهتمة بالمشاركة هو 500، كل عائلة تحجز عددًا معينًا من التذاكر، سعر تذكرة الدخول <span class="highlight-target">30 شيكل للشخص الواحد</span>.<br>
+                عليكم حوسبة إدارة الحجوزات.
+              </p>
+              <div>
+                <strong>المطلوب في نهاية البرنامج:</strong>
+                <ul class="question-task-list">
+                  <li><span class="num-bullet">3.</span> <span class="highlight-target">يقوم البرنامج بطباعة عدد الحجوزات لكل تاريخ على حدة.</span></li>
+                  <li><span class="num-bullet">4.</span> <span class="highlight-target">يقوم البرنامج بطباعة المدخول الكلي للمهرجان بناءً على جميع الحجوزات.</span></li>
+                </ul>
+              </div>
+              <div class="question-output-reqs">
+                <strong>الطباعة بعد انتهاء اللولاء:</strong>
+                <div>&bull; عدد المشاركين في كل تاريخ (10، 12، 13).</div>
+                <div>&bull; المدخول الكلي = مجموع كل الأشخاص &times; 30 شيكل.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Code for Calculations & Printing -->
+          <div class="step-card">
+            <div class="step-card-header">
+              <span class="step-card-title"><span>📊</span> Post-Loop Math &amp; Console Printing</span>
+              <span class="bilingual-tag">طباعة النتائج بعد اللولاء</span>
+            </div>
+            <div class="step-card-body">
+              <div class="code-box">
+                <pre><span class="code-comment">// 1. Calculate total participants across all 3 dates</span>
+<span class="code-type">int</span> totalPeople = count10 + count12 + count13;
+
+<span class="code-comment">// 2. Calculate festival total revenue (30 NIS per ticket)</span>
+<span class="code-type">int</span> totalRevenue = totalPeople * <span class="code-number">30</span>;
+
+<span class="code-comment">// 3. Print the number of attendees for each date</span>
+<span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">"\n=== Festival Report ==="</span>);
+<span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">$"Attendees on December 10: {count10}"</span>);
+<span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">$"Attendees on December 12: {count12}"</span>);
+<span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">$"Attendees on December 13: {count13}"</span>);
+
+<span class="code-comment">// 4. Print total festival revenue</span>
+<span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">$"Total festival revenue: {totalRevenue} NIS"</span>);
+<span class="code-comment">// Sample Output Preview:</span>
+<span class="code-comment">// Attendees on December 10: 1420</span>
+<span class="code-comment">// Attendees on December 12: 1680</span>
+<span class="code-comment">// Attendees on December 13: 1100</span>
+<span class="code-comment">// Total festival revenue: 126000 NIS</span></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 5: Step 5 - Complete Full C# Solution -->
+      <section class="slide-view" id="slide-4">
+        <div class="slide-header">
+          <h1 class="slide-headline"><span>🏆</span> Step 5: Full Solution Code Walkthrough</h1>
+          <div class="step-badge">Step 5 &bull; الحل الكامل والنهائي</div>
+        </div>
+
+        <div class="split-grid">
+          <!-- Left: Question Text Complete Check -->
+          <div class="question-card">
+            <div class="question-card-header">
+              <span class="question-card-title"><span>📋</span> نص المسألة الأصلي &bull; مراجعة الحل</span>
+              <span class="question-pill">تم استيفاء كافة الشروط</span>
+            </div>
+            <div class="question-body">
+              <p class="question-intro">
+                ينظم منظمو مهرجان الشتاء ثلاثة أيام من الفعاليات للعائلات في التواريخ: 10، 12، و13 ديسمبر.<br>
+                عدد العائلات المهتمة بالمشاركة هو 500، كل عائلة تحجز عددًا معينًا من التذاكر، سعر تذكرة الدخول 30 شيكل للشخص الواحد.<br>
+                عليكم حوسبة إدارة الحجوزات.
+              </p>
+              <div>
+                <strong>قائمة التحقق من متطلبات السؤال (Checklist):</strong>
+                <ul class="question-task-list">
+                  <li><span class="num-bullet">✅ 1.</span> اختيار تاريخ الفعالية (10 أو 12 أو 13).</li>
+                  <li><span class="num-bullet">✅ 2.</span> إدخال عدد الأشخاص لكل عائلة.</li>
+                  <li><span class="num-bullet">✅ 3.</span> طباعة عدد المشاركين لكل تاريخ على حدة.</li>
+                  <li><span class="num-bullet">✅ 4.</span> حساب وطباعة المدخول الكلي (العدد &times; 30).</li>
+                </ul>
+              </div>
+              <div class="question-output-reqs">
+                <strong>نصيحة للبجروت / الامتحانات:</strong>
+                <div>تأكد دائمًا من أسماء المتغيرات المعبرة (count10, count12, count13)، والتعليقات التوضيحية لتنظيم الكود.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Complete, Runnable C# Program -->
+          <div class="step-card">
+            <div class="step-card-header">
+              <span class="step-card-title"><span>📄</span> Complete C# Program (Program.cs)</span>
+              <span class="bilingual-tag">الكود الكامل والجاهز للتشغيل</span>
+            </div>
+            <div class="step-card-body">
+              <div class="code-box" style="font-size: 1.02rem; line-height: 1.5;">
+                <pre><span class="code-keyword">using</span> <span class="code-type">System</span>;
+
+<span class="code-keyword">class</span> <span class="code-type">WinterFestival</span>
+{
+    <span class="code-keyword">static</span> <span class="code-keyword">void</span> <span class="code-method">Main</span>()
+    {
+        <span class="code-comment">// Accumulators for attendees on each date</span>
+        <span class="code-type">int</span> count10 = <span class="code-number">0</span>, count12 = <span class="code-number">0</span>, count13 = <span class="code-number">0</span>;
+
+        <span class="code-comment">// Loop over all 500 families</span>
+        <span class="code-keyword">for</span> (<span class="code-type">int</span> i = <span class="code-number">1</span>; i &lt;= <span class="code-number">500</span>; i++)
+        {
+            <span class="code-type">Console</span>.<span class="code-method">Write</span>(<span class="code-string">"Enter event date (10, 12, or 13): "</span>);
+            <span class="code-type">int</span> date = <span class="code-type">int</span>.<span class="code-method">Parse</span>(<span class="code-type">Console</span>.<span class="code-method">ReadLine</span>());
+
+            <span class="code-type">Console</span>.<span class="code-method">Write</span>(<span class="code-string">"Enter number of people: "</span>);
+            <span class="code-type">int</span> people = <span class="code-type">int</span>.<span class="code-method">Parse</span>(<span class="code-type">Console</span>.<span class="code-method">ReadLine</span>());
+
+            <span class="code-keyword">if</span> (date == <span class="code-number">10</span>)      count10 += people;
+            <span class="code-keyword">else if</span> (date == <span class="code-number">12</span>) count12 += people;
+            <span class="code-keyword">else if</span> (date == <span class="code-number">13</span>) count13 += people;
+        }
+
+        <span class="code-comment">// Calculate total attendees and revenue</span>
+        <span class="code-type">int</span> totalPeople  = count10 + count12 + count13;
+        <span class="code-type">int</span> totalRevenue = totalPeople * <span class="code-number">30</span>;
+
+        <span class="code-comment">// Print final festival report</span>
+        <span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">$"Attendees on December 10: {count10}"</span>);
+        <span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">$"Attendees on December 12: {count12}"</span>);
+        <span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">$"Attendees on December 13: {count13}"</span>);
+        <span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">$"Total festival revenue: {totalRevenue} NIS"</span>);
+    }
+}</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer Controls -->
+    <footer class="presentation-footer">
+      <div>
+        <span class="key-badge">◀ Left Arrow</span>
+        <span class="key-badge">Right Arrow ▶</span>
+        <span class="key-badge">Space</span>
+      </div>
+
+      <div class="nav-buttons">
+        <button class="nav-btn" id="prevBtn" disabled>
+          <span>◀</span> السابق / Prev
+        </button>
+        <button class="nav-btn primary" id="nextBtn">
+          التالي / Next <span>▶</span>
+        </button>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    (function() {
+      const totalSlides = 5;
+      let currentSlide = 0;
+
+      const slides = document.querySelectorAll('.slide-view');
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      const slideCounter = document.getElementById('slideCounter');
+      const progressFill = document.getElementById('progressFill');
+
+      function updateSlide(newIndex) {
+        if (newIndex < 0 || newIndex >= totalSlides) return;
+
+        slides[currentSlide].classList.remove('active');
+        currentSlide = newIndex;
+        slides[currentSlide].classList.add('active');
+
+        slideCounter.textContent = 'Step ' + (currentSlide + 1) + ' of ' + totalSlides;
+        const percent = ((currentSlide + 1) / totalSlides) * 100;
+        progressFill.style.width = percent + '%';
+
+        prevBtn.disabled = (currentSlide === 0);
+        if (currentSlide === totalSlides - 1) {
+          nextBtn.innerHTML = 'إعادة العرض / Restart <span>↺</span>';
+        } else {
+          nextBtn.innerHTML = 'التالي / Next <span>▶</span>';
+        }
+      }
+
+      prevBtn.addEventListener('click', function() {
+        updateSlide(currentSlide - 1);
+      });
+
+      nextBtn.addEventListener('click', function() {
+        if (currentSlide < totalSlides - 1) {
+          updateSlide(currentSlide + 1);
+        } else {
+          updateSlide(0);
+        }
+      });
+
+      window.addEventListener('keydown', function(e) {
+        if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
+
+        if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+          e.preventDefault();
+          if (currentSlide < totalSlides - 1) updateSlide(currentSlide + 1);
+        } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+          e.preventDefault();
+          if (currentSlide > 0) updateSlide(currentSlide - 1);
+        } else if (e.key === 'Home') {
+          e.preventDefault();
+          updateSlide(0);
+        } else if (e.key === 'End') {
+          e.preventDefault();
+          updateSlide(totalSlides - 1);
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
