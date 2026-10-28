@@ -170,7 +170,7 @@
     /* 2-Column Split: Left (Question Text as-is), Right (Step Explanation & Code) */
     .split-grid {
       display: grid;
-      grid-template-columns: 0.92fr 1.08fr;
+      grid-template-columns: 0.78fr 1.22fr;
       gap: 20px;
       flex: 1;
       align-items: stretch;
@@ -349,7 +349,8 @@
 
     .code-box pre {
       margin: 0;
-      white-space: pre;
+      white-space: pre-wrap;
+      word-break: normal;
     }
 
     /* Simulation Table */
@@ -645,8 +646,9 @@ Total festival revenue: 126000 NIS</pre>
               </div>
               <div class="question-output-reqs">
                 <strong>المتغيرات الأساسية المطلوبة:</strong>
-                <div>&bull; عداد لكل تاريخ (مجمّع تراكمي / Accumulator) تبدأ من 0.</div>
-                <div>&bull; متغيرات القراءة داخل اللولاء: التاريخ (date) والعدد (people).</div>
+                <div>&bull; تعريف كافة المتغيرات في بداية الدالة (Head of Function).</div>
+                <div>&bull; عدادات لكل تاريخ تبدأ من 0 (count10, count12, count13).</div>
+                <div>&bull; متغيرات القراءة والحساب: date, people, totalPeople, totalRevenue.</div>
               </div>
             </div>
           </div>
@@ -659,23 +661,26 @@ Total festival revenue: 126000 NIS</pre>
             </div>
             <div class="step-card-body">
               <div class="code-box">
-                <pre><span class="code-comment">// 1. Accumulator variables for each date (عدادات تراكمية / מונים צוברים)</span>
-<span class="code-comment">// Declared outside before the loop, initialized to 0:</span>
-<span class="code-type">int</span> count10 = <span class="code-number">0</span>; <span class="code-comment">// Total attendees on December 10</span>
-<span class="code-type">int</span> count12 = <span class="code-number">0</span>; <span class="code-comment">// Total attendees on December 12</span>
-<span class="code-type">int</span> count13 = <span class="code-number">0</span>; <span class="code-comment">// Total attendees on December 13</span>
+                <pre><span class="code-comment">// 1. Local variables at head of function</span>
+<span class="code-comment">// הגדרת כל המשתנים המקומיים בראש הפונקציה:</span>
+<span class="code-type">int</span> count10 = <span class="code-number">0</span>;  <span class="code-comment">// Dec 10 attendees</span>
+<span class="code-type">int</span> count12 = <span class="code-number">0</span>;  <span class="code-comment">// Dec 12 attendees</span>
+<span class="code-type">int</span> count13 = <span class="code-number">0</span>;  <span class="code-comment">// Dec 13 attendees</span>
+<span class="code-type">int</span> date;         <span class="code-comment">// Event date (10, 12, or 13)</span>
+<span class="code-type">int</span> people;       <span class="code-comment">// Family attendee count</span>
+<span class="code-type">int</span> totalPeople;  <span class="code-comment">// Total attendees (all 3 days)</span>
+<span class="code-type">int</span> totalRevenue; <span class="code-comment">// Total revenue in NIS</span>
 
-<span class="code-comment">// 2. Loop through each of the 500 families (לולאה קבועה עבור 500 משפחות)</span>
+<span class="code-comment">// 2. Loop through all 500 families</span>
 <span class="code-keyword">for</span> (<span class="code-type">int</span> i = <span class="code-number">1</span>; i &lt;= <span class="code-number">500</span>; i++)
 {
-    <span class="code-placeholder">// [Step 3]: Prompt user and read event date (10, 12, or 13)</span>
-    <span class="code-placeholder">// [Step 3]: Prompt user and read number of people attending</span>
-    <span class="code-placeholder">// [Step 3]: Accumulate into count10, count12, or count13 using if / else if</span>
+    <span class="code-placeholder">// [Step 3]: Prompt and read date &amp; people</span>
+    <span class="code-placeholder">// [Step 3]: Route with 2-line if/else if</span>
 }
 
-<span class="code-comment">// 3. Post-loop calculations and printing (חישוב והדפסה בסיום התוכנית)</span>
-<span class="code-placeholder">// [Step 4]: Calculate total revenue = (count10 + count12 + count13) * 30</span>
-<span class="code-placeholder">// [Step 4]: Print attendees for each date and total festival revenue</span></pre>
+<span class="code-comment">// 3. Post-loop calculations and printing</span>
+<span class="code-placeholder">// [Step 4]: Calculate totalPeople &amp; revenue</span>
+<span class="code-placeholder">// [Step 4]: Print results using '+' concatenation</span></pre>
               </div>
             </div>
           </div>
@@ -728,25 +733,19 @@ Total festival revenue: 126000 NIS</pre>
               <div class="code-box">
                 <pre><span class="code-keyword">for</span> (<span class="code-type">int</span> i = <span class="code-number">1</span>; i &lt;= <span class="code-number">500</span>; i++)
 {
-    <span class="code-type">Console</span>.<span class="code-method">Write</span>(<span class="code-string">"Enter event date (10, 12, or 13): "</span>);
-    <span class="code-type">int</span> date = <span class="code-type">int</span>.<span class="code-method">Parse</span>(<span class="code-type">Console</span>.<span class="code-method">ReadLine</span>());
+    <span class="code-type">Console</span>.<span class="code-method">Write</span>(<span class="code-string">"Enter date (10, 12, or 13): "</span>);
+    date = <span class="code-type">int</span>.<span class="code-method">Parse</span>(<span class="code-type">Console</span>.<span class="code-method">ReadLine</span>());
 
     <span class="code-type">Console</span>.<span class="code-method">Write</span>(<span class="code-string">"Enter number of people: "</span>);
-    <span class="code-type">int</span> people = <span class="code-type">int</span>.<span class="code-method">Parse</span>(<span class="code-type">Console</span>.<span class="code-method">ReadLine</span>());
+    people = <span class="code-type">int</span>.<span class="code-method">Parse</span>(<span class="code-type">Console</span>.<span class="code-method">ReadLine</span>());
 
-    <span class="code-comment">// Route and accumulate based on the chosen date:</span>
+    <span class="code-comment">// 2-line conditional branching:</span>
     <span class="code-keyword">if</span> (date == <span class="code-number">10</span>)
-    {
         count10 += people;
-    }
     <span class="code-keyword">else if</span> (date == <span class="code-number">12</span>)
-    {
         count12 += people;
-    }
     <span class="code-keyword">else if</span> (date == <span class="code-number">13</span>)
-    {
         count13 += people;
-    }
 }</pre>
               </div>
             </div>
@@ -797,25 +796,23 @@ Total festival revenue: 126000 NIS</pre>
             </div>
             <div class="step-card-body">
               <div class="code-box">
-                <pre><span class="code-comment">// 1. Calculate total participants across all 3 dates</span>
-<span class="code-type">int</span> totalPeople = count10 + count12 + count13;
+                <pre><span class="code-comment">// 1. Calculate totals after the loop</span>
+totalPeople  = count10 + count12 + count13;
+totalRevenue = totalPeople * <span class="code-number">30</span>;
 
-<span class="code-comment">// 2. Calculate festival total revenue (30 NIS per ticket)</span>
-<span class="code-type">int</span> totalRevenue = totalPeople * <span class="code-number">30</span>;
-
-<span class="code-comment">// 3. Print the number of attendees for each date</span>
+<span class="code-comment">// 2. Print report using concatenation (+)</span>
 <span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">"\n=== Festival Report ==="</span>);
-<span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">$"Attendees on December 10: {count10}"</span>);
-<span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">$"Attendees on December 12: {count12}"</span>);
-<span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">$"Attendees on December 13: {count13}"</span>);
+<span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">"Attendees Dec 10: "</span> + count10);
+<span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">"Attendees Dec 12: "</span> + count12);
+<span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">"Attendees Dec 13: "</span> + count13);
+<span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">"Total revenue: "</span>
+    + totalRevenue + <span class="code-string">" NIS"</span>);
 
-<span class="code-comment">// 4. Print total festival revenue</span>
-<span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">$"Total festival revenue: {totalRevenue} NIS"</span>);
 <span class="code-comment">// Sample Output Preview:</span>
-<span class="code-comment">// Attendees on December 10: 1420</span>
-<span class="code-comment">// Attendees on December 12: 1680</span>
-<span class="code-comment">// Attendees on December 13: 1100</span>
-<span class="code-comment">// Total festival revenue: 126000 NIS</span></pre>
+<span class="code-comment">// Attendees Dec 10: 1420</span>
+<span class="code-comment">// Attendees Dec 12: 1680</span>
+<span class="code-comment">// Attendees Dec 13: 1100</span>
+<span class="code-comment">// Total revenue: 126000 NIS</span></pre>
               </div>
             </div>
           </div>
@@ -865,39 +862,48 @@ Total festival revenue: 126000 NIS</pre>
               <span class="bilingual-tag">الكود الكامل والجاهز للتشغيل</span>
             </div>
             <div class="step-card-body">
-              <div class="code-box" style="font-size: 1.02rem; line-height: 1.5;">
+              <div class="code-box" style="font-size: 0.94rem; line-height: 1.44;">
                 <pre><span class="code-keyword">using</span> <span class="code-type">System</span>;
 
 <span class="code-keyword">class</span> <span class="code-type">WinterFestival</span>
 {
     <span class="code-keyword">static</span> <span class="code-keyword">void</span> <span class="code-method">Main</span>()
     {
-        <span class="code-comment">// Accumulators for attendees on each date</span>
+        <span class="code-comment">// 1. All local variables at head of function</span>
         <span class="code-type">int</span> count10 = <span class="code-number">0</span>, count12 = <span class="code-number">0</span>, count13 = <span class="code-number">0</span>;
+        <span class="code-type">int</span> date, people;
+        <span class="code-type">int</span> totalPeople, totalRevenue;
 
-        <span class="code-comment">// Loop over all 500 families</span>
+        <span class="code-comment">// 2. Loop over all 500 families</span>
         <span class="code-keyword">for</span> (<span class="code-type">int</span> i = <span class="code-number">1</span>; i &lt;= <span class="code-number">500</span>; i++)
         {
-            <span class="code-type">Console</span>.<span class="code-method">Write</span>(<span class="code-string">"Enter event date (10, 12, or 13): "</span>);
-            <span class="code-type">int</span> date = <span class="code-type">int</span>.<span class="code-method">Parse</span>(<span class="code-type">Console</span>.<span class="code-method">ReadLine</span>());
+            <span class="code-type">Console</span>.<span class="code-method">Write</span>(<span class="code-string">"Enter date (10, 12, 13): "</span>);
+            date = <span class="code-type">int</span>.<span class="code-method">Parse</span>(<span class="code-type">Console</span>.<span class="code-method">ReadLine</span>());
 
             <span class="code-type">Console</span>.<span class="code-method">Write</span>(<span class="code-string">"Enter number of people: "</span>);
-            <span class="code-type">int</span> people = <span class="code-type">int</span>.<span class="code-method">Parse</span>(<span class="code-type">Console</span>.<span class="code-method">ReadLine</span>());
+            people = <span class="code-type">int</span>.<span class="code-method">Parse</span>(<span class="code-type">Console</span>.<span class="code-method">ReadLine</span>());
 
-            <span class="code-keyword">if</span> (date == <span class="code-number">10</span>)      count10 += people;
-            <span class="code-keyword">else if</span> (date == <span class="code-number">12</span>) count12 += people;
-            <span class="code-keyword">else if</span> (date == <span class="code-number">13</span>) count13 += people;
+            <span class="code-comment">// 2-line if / else if conditions</span>
+            <span class="code-keyword">if</span> (date == <span class="code-number">10</span>)
+                count10 += people;
+            <span class="code-keyword">else if</span> (date == <span class="code-number">12</span>)
+                count12 += people;
+            <span class="code-keyword">else if</span> (date == <span class="code-number">13</span>)
+                count13 += people;
         }
 
-        <span class="code-comment">// Calculate total attendees and revenue</span>
-        <span class="code-type">int</span> totalPeople  = count10 + count12 + count13;
-        <span class="code-type">int</span> totalRevenue = totalPeople * <span class="code-number">30</span>;
+        <span class="code-comment">// 3. Post-loop calculations</span>
+        totalPeople  = count10 + count12 + count13;
+        totalRevenue = totalPeople * <span class="code-number">30</span>;
 
-        <span class="code-comment">// Print final festival report</span>
-        <span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">$"Attendees on December 10: {count10}"</span>);
-        <span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">$"Attendees on December 12: {count12}"</span>);
-        <span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">$"Attendees on December 13: {count13}"</span>);
-        <span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">$"Total festival revenue: {totalRevenue} NIS"</span>);
+        <span class="code-comment">// 4. Print report using concatenation (+)
+        // (بدون دمج نصوص / ללא שרשור עם $)</span>
+        <span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">"=== Festival Report ==="</span>);
+        <span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">"Attendees Dec 10: "</span> + count10);
+        <span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">"Attendees Dec 12: "</span> + count12);
+        <span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">"Attendees Dec 13: "</span> + count13);
+        <span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">"Total revenue: "</span>
+            + totalRevenue + <span class="code-string">" NIS"</span>);
     }
 }</pre>
               </div>
