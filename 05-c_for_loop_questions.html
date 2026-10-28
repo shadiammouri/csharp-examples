@@ -416,7 +416,7 @@
     <!-- Header -->
     <header class="presentation-header">
       <span class="topic-pill">C# For Loop Questions &bull; 10th Grade CS</span>
-      <div class="slide-counter" id="slideCounter">Question 1 of 8</div>
+      <div class="slide-counter" id="slideCounter">Question 1 of 12</div>
     </header>
 
     <div class="progress-bar">
@@ -430,7 +430,7 @@
       <section class="slide-view active" id="slide-0">
         <div class="slide-header">
           <h1 class="slide-headline"><span>❓</span> Question 1: Basic Counter</h1>
-          <div class="difficulty-badge">⭐ Level 1 of 8</div>
+          <div class="difficulty-badge">⭐ Level 1 of 12</div>
         </div>
 
         <div class="question-grid">
@@ -475,7 +475,7 @@
       <section class="slide-view" id="slide-1">
         <div class="slide-header">
           <h1 class="slide-headline"><span>❓</span> Question 2: Initial Condition Check</h1>
-          <div class="difficulty-badge">⭐⭐ Level 2 of 8</div>
+          <div class="difficulty-badge">⭐⭐ Level 2 of 12</div>
         </div>
 
         <div class="question-grid">
@@ -520,7 +520,7 @@
       <section class="slide-view" id="slide-2">
         <div class="slide-header">
           <h1 class="slide-headline"><span>❓</span> Question 3: Custom Step Increment</h1>
-          <div class="difficulty-badge">⭐⭐⭐ Level 3 of 8</div>
+          <div class="difficulty-badge">⭐⭐⭐ Level 3 of 12</div>
         </div>
 
         <div class="question-grid">
@@ -565,7 +565,7 @@
       <section class="slide-view" id="slide-3">
         <div class="slide-header">
           <h1 class="slide-headline"><span>❓</span> Question 4: Countdown Boundary</h1>
-          <div class="difficulty-badge">⭐⭐⭐⭐ Level 4 of 8</div>
+          <div class="difficulty-badge">⭐⭐⭐⭐ Level 4 of 12</div>
         </div>
 
         <div class="question-grid">
@@ -610,7 +610,7 @@
       <section class="slide-view" id="slide-4">
         <div class="slide-header">
           <h1 class="slide-headline"><span>❓</span> Question 5: Loop + "if" Filter</h1>
-          <div class="difficulty-badge">⭐⭐⭐⭐⭐ Level 5 of 8</div>
+          <div class="difficulty-badge">⭐⭐⭐⭐⭐ Level 5 of 12</div>
         </div>
 
         <div class="question-grid">
@@ -656,7 +656,7 @@
       <section class="slide-view" id="slide-5">
         <div class="slide-header">
           <h1 class="slide-headline"><span>❓</span> Question 6: Loop &amp; Condition Tracing</h1>
-          <div class="difficulty-badge">⭐⭐⭐⭐⭐⭐ Level 6 of 8</div>
+          <div class="difficulty-badge">⭐⭐⭐⭐⭐⭐ Level 6 of 12</div>
         </div>
 
         <div class="question-grid">
@@ -698,15 +698,63 @@
         </div>
       </section>
 
-      <!-- SLIDE 7: Question 7 - Level 7: Conditional Accumulator -->
+            <!-- SLIDE 7: Question 7 - Level 7: Even Numbers Accumulator -->
       <section class="slide-view" id="slide-6">
         <div class="slide-header">
-          <h1 class="slide-headline"><span>❓</span> Question 7: Conditional Sum</h1>
-          <div class="difficulty-badge">⭐⭐⭐⭐⭐⭐⭐ Level 7 of 8</div>
+          <h1 class="slide-headline"><span>❓</span> Question 7: Even Numbers Accumulator</h1>
+          <div class="difficulty-badge">⭐⭐⭐⭐⭐⭐⭐ Level 7 of 12</div>
         </div>
 
         <div class="question-grid">
-          <!-- Code Card (Single loop, 1-2 lines inside) -->
+          <div class="code-card">
+            <div class="card-top">
+              <span class="card-title">C# Code Snippet</span>
+            </div>
+            <div class="card-code">
+              <pre><span class="code-type">int</span> sum = <span class="code-number">0</span>;
+<span class="code-keyword">for</span> (<span class="code-type">int</span> i = <span class="code-number">2</span>; i &lt;= <span class="code-number">8</span>; i += <span class="code-number">2</span>)
+{
+    sum += i;
+}
+<span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(sum);</pre>
+            </div>
+          </div>
+
+          <div class="qa-card">
+            <div class="prompt-box">
+              <span class="prompt-label">Challenge</span>
+              <p class="prompt-text">What will be printed to the console when this program executes?</p>
+            </div>
+
+            <button class="reveal-btn" data-target="ans-6">
+              <span>👁️</span> Click to Reveal Answer
+            </button>
+
+            <div class="answer-panel" id="ans-6">
+              <div class="answer-headline">&gt; Output: 20</div>
+              <span>• Round 1 (i = 2): <code>sum = 0 + 2 = 2</code><br>
+                    • Round 2 (i = 4): <code>sum = 2 + 4 = 6</code><br>
+                    • Round 3 (i = 6): <code>sum = 6 + 6 = 12</code><br>
+                    • Round 4 (i = 8): <code>sum = 12 + 8 = 20</code><br>
+                    When <code>i = 10</code>, <code>10 &lt;= 8</code> is false and loop stops. The final printed sum is <strong>20</strong>.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="key-idea-banner">
+          <span>🎯</span>
+          <div><strong>Accumulator Pattern (צובר סכום):</strong> An external variable starting at 0 collects values on each iteration using <code>sum += i</code>.</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 8: Question 8 - Level 8: Conditional Sum with Filter -->
+      <section class="slide-view" id="slide-7">
+        <div class="slide-header">
+          <h1 class="slide-headline"><span>❓</span> Question 8: Conditional Sum</h1>
+          <div class="difficulty-badge">⭐⭐⭐⭐⭐⭐⭐⭐ Level 8 of 12</div>
+        </div>
+
+        <div class="question-grid">
           <div class="code-card">
             <div class="card-top">
               <span class="card-title">C# Code Snippet</span>
@@ -722,39 +770,87 @@
             </div>
           </div>
 
-          <!-- Question & Answer Box -->
           <div class="qa-card">
             <div class="prompt-box">
               <span class="prompt-label">Challenge</span>
               <p class="prompt-text">What will be printed to the console when this program executes?</p>
             </div>
 
-            <button class="reveal-btn" data-target="ans-6">
+            <button class="reveal-btn" data-target="ans-7">
               <span>👁️</span> Click to Reveal Answer
             </button>
 
-            <div class="answer-panel" id="ans-6">
+            <div class="answer-panel" id="ans-7">
               <div class="answer-headline">&gt; Output: 12</div>
-              <span>The loop cycles through 1, 2, 3, 4, 5. When <code>i == 3</code>, the condition <code>i != 3</code> is false, skipping 3. The final sum is <code>1 + 2 + 4 + 5 = 12</code>.</span>
+              <span>The loop cycles through 1, 2, 3, 4, 5. When <code>i == 3</code>, the condition <code>i != 3</code> evaluates to false, skipping 3. The final sum is <code>1 + 2 + 4 + 5 = 12</code>.</span>
             </div>
           </div>
         </div>
 
         <div class="key-idea-banner">
-          <span>🎯</span>
-          <div><strong>Accumulation Tracing:</strong> When tracing loops on exams, write down the value of <code>sum</code> after each iteration to avoid mental calculation slips.</div>
+          <span>🔍</span>
+          <div><strong>Selective Accumulation:</strong> The <code>if</code> condition filters which values are added into the accumulator and which are skipped.</div>
         </div>
       </section>
 
-      <!-- SLIDE 8: Question 8 - Level 8: Multiplicative Step with if & break -->
-      <section class="slide-view" id="slide-7">
+      <!-- SLIDE 9: Question 9 - Level 9: Modulo Divisibility Sum -->
+      <section class="slide-view" id="slide-8">
         <div class="slide-header">
-          <h1 class="slide-headline"><span>❓</span> Question 8: Alternating Accumulator</h1>
-          <div class="difficulty-badge">⭐⭐⭐⭐⭐⭐⭐⭐ Level 8 of 8</div>
+          <h1 class="slide-headline"><span>❓</span> Question 9: Modulo Filtered Sum</h1>
+          <div class="difficulty-badge">⭐⭐⭐⭐⭐⭐⭐⭐⭐ Level 9 of 12</div>
         </div>
 
         <div class="question-grid">
-          <!-- Code Card (Single loop, 1-2 lines inside, no modification of loop index) -->
+          <div class="code-card">
+            <div class="card-top">
+              <span class="card-title">C# Code Snippet</span>
+            </div>
+            <div class="card-code">
+              <pre><span class="code-type">int</span> sum = <span class="code-number">0</span>;
+<span class="code-keyword">for</span> (<span class="code-type">int</span> i = <span class="code-number">1</span>; i &lt;= <span class="code-number">10</span>; i++)
+{
+    <span class="code-keyword">if</span> (i % <span class="code-number">3</span> == <span class="code-number">0</span>)
+        sum += i;
+}
+<span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(sum);</pre>
+            </div>
+          </div>
+
+          <div class="qa-card">
+            <div class="prompt-box">
+              <span class="prompt-label">Challenge</span>
+              <p class="prompt-text">What will be printed to the console when this program executes?</p>
+            </div>
+
+            <button class="reveal-btn" data-target="ans-8">
+              <span>👁️</span> Click to Reveal Answer
+            </button>
+
+            <div class="answer-panel" id="ans-8">
+              <div class="answer-headline">&gt; Output: 18</div>
+              <span>The loop checks 1 through 10. The condition <code>i % 3 == 0</code> matches only multiples of 3:<br>
+                    • i = 3: <code>sum = 0 + 3 = 3</code><br>
+                    • i = 6: <code>sum = 3 + 6 = 9</code><br>
+                    • i = 9: <code>sum = 9 + 9 = 18</code><br>
+                    All other numbers leave a non-zero remainder and are skipped. Final sum printed is <strong>18</strong>.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="key-idea-banner">
+          <span>⚡</span>
+          <div><strong>Divisibility Sum:</strong> Modulo filtering <code>i % N == 0</code> lets you sum numbers in a series, such as multiples of 3 (3 + 6 + 9 = 18).</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 10: Question 10 - Level 10: Alternating Accumulator -->
+      <section class="slide-view" id="slide-9">
+        <div class="slide-header">
+          <h1 class="slide-headline"><span>❓</span> Question 10: Alternating Accumulator</h1>
+          <div class="difficulty-badge">⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐ Level 10 of 12</div>
+        </div>
+
+        <div class="question-grid">
           <div class="code-card">
             <div class="card-top">
               <span class="card-title">C# Code Snippet</span>
@@ -772,18 +868,17 @@
             </div>
           </div>
 
-          <!-- Question & Answer Box -->
           <div class="qa-card">
             <div class="prompt-box">
               <span class="prompt-label">Challenge</span>
               <p class="prompt-text">What will be printed to the console when this program executes?</p>
             </div>
 
-            <button class="reveal-btn" data-target="ans-7">
+            <button class="reveal-btn" data-target="ans-9">
               <span>👁️</span> Click to Reveal Answer
             </button>
 
-            <div class="answer-panel" id="ans-7">
+            <div class="answer-panel" id="ans-9">
               <div class="answer-headline">&gt; Output: 3</div>
               <span>• Round 1 (i = 1, odd): <code>total = 0 - 1 = -1</code><br>
                     • Round 2 (i = 2, even): <code>total = -1 + 2 = 1</code><br>
@@ -798,7 +893,118 @@
 
         <div class="key-idea-banner">
           <span>💡</span>
-          <div><strong>Alternating Accumulator:</strong> Parity check <code>i % 2 == 0</code> splits execution into adding even numbers and subtracting odd numbers, without modifying the loop variable <code>i</code>.</div>
+          <div><strong>Alternating Accumulator:</strong> Parity check <code>i % 2 == 0</code> splits execution into adding evens and subtracting odds.</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 11: Question 11 - Level 11: Threshold-Gated Accumulator -->
+      <section class="slide-view" id="slide-10">
+        <div class="slide-header">
+          <h1 class="slide-headline"><span>❓</span> Question 11: Threshold-Gated Sum</h1>
+          <div class="difficulty-badge">⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐ Level 11 of 12</div>
+        </div>
+
+        <div class="question-grid">
+          <div class="code-card">
+            <div class="card-top">
+              <span class="card-title">C# Code Snippet</span>
+            </div>
+            <div class="card-code">
+              <pre><span class="code-type">int</span> sum = <span class="code-number">0</span>;
+<span class="code-keyword">for</span> (<span class="code-type">int</span> i = <span class="code-number">1</span>; i &lt;= <span class="code-number">5</span>; i++)
+{
+    <span class="code-keyword">if</span> (sum &lt; <span class="code-number">10</span>)
+        sum += i * <span class="code-number">3</span>;
+}
+<span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(sum);</pre>
+            </div>
+          </div>
+
+          <div class="qa-card">
+            <div class="prompt-box">
+              <span class="prompt-label">Challenge</span>
+              <p class="prompt-text">What will be printed to the console when this program executes?</p>
+            </div>
+
+            <button class="reveal-btn" data-target="ans-10">
+              <span>👁️</span> Click to Reveal Answer
+            </button>
+
+            <div class="answer-panel" id="ans-10">
+              <div class="answer-headline">&gt; Output: 18</div>
+              <span>• i = 1: <code>sum &lt; 10</code> (0 &lt; 10 is true) ➔ <code>sum = 0 + 3 = 3</code><br>
+                    • i = 2: <code>sum &lt; 10</code> (3 &lt; 10 is true) ➔ <code>sum = 3 + 6 = 9</code><br>
+                    • i = 3: <code>sum &lt; 10</code> (9 &lt; 10 is true) ➔ <code>sum = 9 + 9 = 18</code><br>
+                    • i = 4: <code>sum &lt; 10</code> (18 &lt; 10 is false) ➔ skipped, sum stays 18<br>
+                    • i = 5: <code>sum &lt; 10</code> (18 &lt; 10 is false) ➔ skipped, sum stays 18<br>
+                    Loop completes all 5 rounds. Final printed sum is <strong>18</strong>.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="key-idea-banner">
+          <span>🛑</span>
+          <div><strong>Threshold Gating:</strong> Testing the accumulator itself (<code>sum &lt; 10</code>) freezes additions once the target is passed.</div>
+        </div>
+      </section>
+
+      <!-- SLIDE 12: Question 12 - Level 12: Min and Max Calculation in Loop -->
+      <section class="slide-view" id="slide-11">
+        <div class="slide-header">
+          <h1 class="slide-headline"><span>❓</span> Question 12: Min &amp; Max from User Input</h1>
+          <div class="difficulty-badge">⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐ Level 12 of 12</div>
+        </div>
+
+        <div class="question-grid">
+          <div class="code-card">
+            <div class="card-top">
+              <span class="card-title">C# Code Snippet</span>
+            </div>
+            <div class="card-code" style="font-size: 1.08rem; line-height: 1.52;">
+              <pre><span class="code-comment">// Assume user enters: 15, 4, 32, 8, 19</span>
+<span class="code-type">int</span> num = <span class="code-type">int</span>.<span class="code-method">Parse</span>(<span class="code-type">Console</span>.<span class="code-method">ReadLine</span>());
+<span class="code-type">int</span> min = num;
+<span class="code-type">int</span> max = num;
+
+<span class="code-keyword">for</span> (<span class="code-type">int</span> i = <span class="code-number">1</span>; i &lt;= <span class="code-number">4</span>; i++)
+{
+    num = <span class="code-type">int</span>.<span class="code-method">Parse</span>(<span class="code-type">Console</span>.<span class="code-method">ReadLine</span>());
+
+    <span class="code-keyword">if</span> (num &lt; min)
+        min = num;
+
+    <span class="code-keyword">if</span> (num &gt; max)
+        max = num;
+}
+<span class="code-type">Console</span>.<span class="code-method">WriteLine</span>(<span class="code-string">$"Min: {min}, Max: {max}"</span>);</pre>
+            </div>
+          </div>
+
+          <div class="qa-card">
+            <div class="prompt-box">
+              <span class="prompt-label">Challenge</span>
+              <p class="prompt-text">What will be printed to the console when this program executes?</p>
+            </div>
+
+            <button class="reveal-btn" data-target="ans-11">
+              <span>👁️</span> Click to Reveal Answer
+            </button>
+
+            <div class="answer-panel" id="ans-11">
+              <div class="answer-headline">&gt; Output: Min: 4, Max: 32</div>
+              <span>• Before loop: reads <code>15</code> ➔ <code>min = 15, max = 15</code><br>
+                    • Round 1 (i = 1): reads <code>4</code> ➔ <code>4 &lt; 15</code> is true ➔ <code>min = 4</code><br>
+                    • Round 2 (i = 2): reads <code>32</code> ➔ <code>32 &gt; 15</code> is true ➔ <code>max = 32</code><br>
+                    • Round 3 (i = 3): reads <code>8</code> ➔ between 4 and 32 (no change)<br>
+                    • Round 4 (i = 4): reads <code>19</code> ➔ between 4 and 32 (no change)<br>
+                    Loop terminates after 4 rounds. Final output is <strong>Min: 4, Max: 32</strong>.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="key-idea-banner">
+          <span>🏆</span>
+          <div><strong>User Input Min/Max Pattern:</strong> Read the first number before the loop to seed both <code>min</code> and <code>max</code>, then loop through the remaining inputs updating boundaries.</div>
         </div>
       </section>
 
@@ -825,7 +1031,7 @@
 
   <script>
     (function() {
-      const totalSlides = 8;
+      const totalSlides = 12;
       let currentSlide = 0;
 
       const slides = document.querySelectorAll('.slide-view');
